@@ -1,5 +1,6 @@
 package com.bookstore.response;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -7,9 +8,12 @@ import lombok.experimental.FieldDefaults;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@FieldDefaults(level = AccessLevel.PRIVATE)
+@Setter
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class ApiResponse <T> {
     int code = 1000;
     String message = "OK";
-    T response;
+    @Setter
+    T result;
+
 }
