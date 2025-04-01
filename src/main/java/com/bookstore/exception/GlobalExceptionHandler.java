@@ -1,6 +1,6 @@
 package com.bookstore.exception;
 
-import com.bookstore.response.ApiResponse;
+import com.bookstore.dto.request.ApiResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ControllerAdvice;
