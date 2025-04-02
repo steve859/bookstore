@@ -35,9 +35,18 @@ public class UserService {
         return apiResponse;
     }
 
-    public UserResponse getUser(String userId){
-        return userMapper.toUserResponse(userRepository.findById(userId)
-                .orElseThrow(() -> new RuntimeException("User not found")));
+    public ApiResponse<User> getUser(String userId){
+        ApiResponse<User> apiResponse = new ApiResponse<>();
+        User user = userRepository.findById(userId).orElse(null);
+        apiResponse.setResult(user);
+        return apiResponse;
+    }
+
+    public  UserResponse updateUser(String userId, UserUpdateRequest request) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+        userMapper.updateUser(user, request);
+        return userMapper.toUserResponse(userRepository.save(user));
     }
 
 }

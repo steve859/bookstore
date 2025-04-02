@@ -1,5 +1,6 @@
 package com.bookstore.controller;
 
+import com.bookstore.dto.request.UserUpdateRequest;
 import com.bookstore.dto.response.UserResponse;
 import com.bookstore.entity.User;
 import com.bookstore.dto.request.UserCreationRequest;
@@ -37,7 +38,13 @@ public class UserController {
     }
 
     @GetMapping("/{userId}")
-    UserResponse getUser(@PathVariable("userId") String userId) {
+    ApiResponse<User> getUser(@PathVariable("userId") String userId) {
         return userService.getUser(userId);
     }
+
+    @PutMapping("/{userId}")
+    UserResponse updateUser(@PathVariable String userId, @RequestBody UserUpdateRequest request) {
+            return userService.updateUser(userId, request);
+    }
+    
 }
