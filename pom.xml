@@ -8,10 +8,10 @@
         <version>3.2.2</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
-    <groupId>com.devteria</groupId>
+    <groupId>com.bookstore</groupId>
     <artifactId>identity-service</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>identity-service</name>
+    <name>bookstore</name>
     <description>Identity service</description>
     <properties>
         <java.version>21</java.version>
@@ -53,6 +53,17 @@
             <artifactId>mapstruct</artifactId>
             <version>${mapstruct.version}</version>
         </dependency>
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-crypto</artifactId>
+            <version>5.8.0</version> <!-- Cập nhật phiên bản phù hợp -->
+        </dependency>
+        <dependency>
+            <groupId>com.nimbusds</groupId>
+            <artifactId>nimbus-jose-jwt</artifactId>
+            <version>9.41.1</version>
+        </dependency>
+
     </dependencies>
 
     <build>
