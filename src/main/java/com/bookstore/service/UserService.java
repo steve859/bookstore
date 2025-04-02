@@ -49,4 +49,12 @@ public class UserService {
         return userMapper.toUserResponse(userRepository.save(user));
     }
 
+    public String deleteUser(String userId){
+        User user = userRepository.findById(userId).orElse(null);
+        if(user != null) {
+            userRepository.delete(user);
+            return "User has been deleted";
+        }
+        return "User not found";
+    }
 }
