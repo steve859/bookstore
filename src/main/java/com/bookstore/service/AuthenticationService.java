@@ -1,7 +1,9 @@
 package com.bookstore.service;
 
 import com.bookstore.dto.request.AuthenticationRequest;
+import com.bookstore.dto.request.IntrospectRequest;
 import com.bookstore.dto.response.AuthenticationResponse;
+import com.bookstore.dto.response.IntrospectResponse;
 import com.bookstore.exception.AppException;
 import com.bookstore.exception.ErrorCode;
 import com.bookstore.repository.UserRepository;
@@ -34,7 +36,8 @@ import org.slf4j.LoggerFactory;
 public class AuthenticationService {
     UserRepository userRepository;
     @NonFinal
-    protected static final String SIGNER_KEY = "hqAeVDopETSm5Z0U2oeM/U7Vvhku1WvewDyOkjWKGTQZmBam4rwO+58RWpv0Rul3";
+    @Value("${jwt.signerKey}")
+    protected String SIGNER_KEY;
     private static final Logger logger = LoggerFactory.getLogger(AuthenticationService.class);
 
     public AuthenticationResponse authenticate(AuthenticationRequest authenticationRequest) {
@@ -52,6 +55,20 @@ public class AuthenticationService {
             .authenticated(true)    
             .build();
     }
+
+    public IntrospectResponse introspect(IntrospectRequest request) throws JOSEException, ParseException{
+        var token = request.getToken();
+        
+        JWSVerifier verifier = new MACVerifier(SIGNER_KEY.getBytes());
+        SignedJWT signedJWT = SignedJWT.parse(token);
+
+        Date expiryTime = signedJWT.getJWTClaimsSet().getExpirationTime();
+        var verified = signedJWT.verify(verifier);
+        return IntrospectResponse.builder()
+            .valid(verified && expiryTime.after(new Date()))
+            .build();
+    }
+
     private String generateToken(String username){
         JWSHeader jwsHeader = new JWSHeader(JWSAlgorithm.HS512);
         JWTClaimsSet jwtClaimsSet = new JWTClaimsSet.Builder()
