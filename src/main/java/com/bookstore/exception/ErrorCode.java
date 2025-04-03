@@ -9,6 +9,7 @@ public enum ErrorCode {
     DATABASE_ERROR(1006, "Database connection error"),
     UNCATEGORIZED_ERROR(1007, "Uncategorized error"),
     USER_ALREADY_EXISTS(1008, "User already exists"),
+    UNAUTHENTICATED_ERROR(1009, "Unauthenticated")
     ;
 
     private final int code;

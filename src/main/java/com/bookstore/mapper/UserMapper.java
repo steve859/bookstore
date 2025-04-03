@@ -14,6 +14,6 @@ import org.springframework.stereotype.Component;
         User toUser(UserCreationRequest request);
         User toUser(UserUpdateRequest request);
         void updateUser(@MappingTarget User user, UserUpdateRequest request);
-        @Mapping(ignore = false, target = "lastName")
+        @Mapping(source = "id", target = "Id")
         UserResponse toUserResponse(User user);
     }

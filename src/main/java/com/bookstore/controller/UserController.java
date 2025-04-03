@@ -51,6 +51,7 @@ public class UserController {
     @PutMapping("/{userId}")
     ApiResponse<UserResponse> updateUser(@PathVariable String userId, @RequestBody UserUpdateRequest request){
         return ApiResponse.<UserResponse>builder()
+                .code(1000)
                 .result(userService.updateUser(userId, request))
                 .build();
     }
@@ -61,6 +62,7 @@ public class UserController {
     ApiResponse<String> deleteUser(@PathVariable String userId){
         userService.deleteUser(userId);
         return ApiResponse.<String>builder()
+                .code(1000)
                 .result("User has been deleted")
                 .build();
     }
