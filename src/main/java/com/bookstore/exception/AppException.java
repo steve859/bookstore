@@ -9,8 +9,8 @@ public class AppException extends RuntimeException {
     }
     private ErrorCode errorCode;
 
-    public int getErrorCode() {
-        return errorCode.getCode();
+    public ErrorCode getErrorCode() {
+        return errorCode;
     }
 
     public void setErrorCode(ErrorCode errorCode) {
