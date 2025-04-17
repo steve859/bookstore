@@ -6,6 +6,8 @@ import lombok.experimental.FieldDefaults;
 import java.time.LocalDate;
 import java.util.Set;
 
+import com.bookstore.entity.Role;
+
 @Data
 @Builder
 @NoArgsConstructor
@@ -14,10 +16,11 @@ import java.util.Set;
 public class UserResponse {
     String Id;
     String username;
+    // String password;
     String firstName;
     String lastName;
     String email;
     String phone;
     LocalDate dob;
-    Set<String> roles;
+    Set<Role> roles;
 }

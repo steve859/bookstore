@@ -8,6 +8,12 @@ import com.bookstore.exception.AppException;
 import com.bookstore.exception.ErrorCode;
 import com.bookstore.mapper.UserMapper;
 import com.bookstore.repository.UserRepository;
+
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
+import lombok.extern.slf4j.Slf4j;
+
 import com.bookstore.dto.request.UserCreationRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PostAuthorize;
@@ -24,6 +30,9 @@ import java.util.List;
 import javax.management.relation.Role;
 
 @Service
+@RequiredArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
+@Slf4j
 public class UserService {
     @Autowired
     private UserRepository userRepository;
@@ -40,7 +49,7 @@ public class UserService {
 
         HashSet<String> roles = new HashSet<>();
         roles.add(com.bookstore.enums.Role.USER.name());
-        user.setRoles(roles);
+        //user.setRoles(roles);
 
         return userMapper.toUserResponse(userRepository.save(user));
     }

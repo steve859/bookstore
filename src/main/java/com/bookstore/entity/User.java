@@ -4,6 +4,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.ManyToMany;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -13,6 +14,7 @@ import lombok.experimental.FieldDefaults;
 
 import java.time.LocalDate;
 import java.util.Set;
+
 
 @Entity
 @FieldDefaults(level = AccessLevel.PRIVATE)
@@ -31,5 +33,6 @@ public class User {
     String email;
     String phone;
     LocalDate dob;
-    Set<String> roles;
+    @ManyToMany
+    Set<Role> roles;
 }
