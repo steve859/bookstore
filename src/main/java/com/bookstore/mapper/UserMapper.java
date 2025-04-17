@@ -8,12 +8,9 @@ import com.bookstore.dto.request.UserUpdateRequest;
 import org.mapstruct.*;
 import org.springframework.stereotype.Component;
 
-    @Component
-    @Mapper(componentModel = "spring")
-    public interface UserMapper {
-        User toUser(UserCreationRequest request);
-        User toUser(UserUpdateRequest request);
-        void updateUser(@MappingTarget User user, UserUpdateRequest request);
-        @Mapping(source = "id", target = "Id")
-        UserResponse toUserResponse(User user);
-    }
+@Mapper(componentModel = "spring")
+public interface UserMapper {
+    User toUser(UserCreationRequest request);
+    UserResponse toUserResponse(User user);
+    void updateUser(@MappingTarget User user, UserUpdateRequest request);
+}

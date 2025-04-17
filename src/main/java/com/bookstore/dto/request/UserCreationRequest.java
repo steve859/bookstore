@@ -5,6 +5,8 @@ import lombok.AccessLevel;
 import lombok.*;
 import lombok.Singular;
 import lombok.experimental.FieldDefaults;
+import java.util.Set;
+import com.bookstore.entity.Role;
 
 import java.time.LocalDate;
 
@@ -23,6 +25,5 @@ public class UserCreationRequest {
     String email;
     String phone;
     LocalDate dob;
-    String role;
 
 }

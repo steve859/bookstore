@@ -17,7 +17,6 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.experimental.NonFinal;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -30,7 +29,6 @@ import java.time.temporal.ChronoUnit;
 import java.util.Date;
 import java.util.StringJoiner;
 
-import org.hibernate.grammars.hql.HqlParser.CollectionFunctionMisuseContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -98,7 +96,7 @@ public class AuthenticationService {
     private String buildScope(User user){
         StringJoiner stringJoiner = new StringJoiner(" ");
         if(!CollectionUtils.isEmpty(user.getRoles())){
-            user.getRoles().forEach(s -> stringJoiner.add(s));
+            //user.getRoles().forEach(s -> stringJoiner.add(s));
         }
         return stringJoiner.toString();
     }
