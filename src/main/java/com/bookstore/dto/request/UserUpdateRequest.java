@@ -4,6 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.util.List;
 import java.util.Set;
 import java.time.LocalDate;
 import com.bookstore.entity.Role;
@@ -18,5 +20,5 @@ public class UserUpdateRequest {
     String firstName;
     String lastName;
     LocalDate dob;
-    // Set<Role> roles;
+    List<String> roles;
 }

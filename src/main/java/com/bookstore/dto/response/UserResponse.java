@@ -14,7 +14,7 @@ import com.bookstore.entity.Role;
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class UserResponse {
-    String Id;
+    String id;
     String username;
     // String password;
     String firstName;
@@ -22,5 +22,5 @@ public class UserResponse {
     String email;
     String phone;
     LocalDate dob;
-    Set<Role> roles;
+    Set<RoleResponse> roles;
 }
