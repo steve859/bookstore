@@ -7,6 +7,7 @@ import com.bookstore.entity.User;
 import com.bookstore.exception.AppException;
 import com.bookstore.exception.ErrorCode;
 import com.bookstore.mapper.UserMapper;
+import com.bookstore.repository.RoleRepository;
 import com.bookstore.repository.UserRepository;
 
 import lombok.AccessLevel;
@@ -23,21 +24,24 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import com.bookstore.enums.*;
-
+import com.bookstore.entity.Role;
 import java.util.HashSet;
 import java.util.List;
 
-import javax.management.relation.Role;
+
 
 @Service
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @Slf4j
 public class UserService {
-    @Autowired
-    private UserRepository userRepository;
-    @Autowired
-    private UserMapper userMapper;
+
+    PasswordEncoder passwordEncoder;
+    UserRepository userRepository;
+    UserMapper userMapper;
+    RoleRepository roleRepository;
+
+    
 
     public UserResponse createUser(UserCreationRequest request){
         if (userRepository.existsByUsername(request.getUsername()))
@@ -66,10 +70,12 @@ public class UserService {
 
     public UserResponse updateUser(String userId, UserUpdateRequest request) {
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
 
         userMapper.updateUser(user, request);
-
+        user.setPassword(passwordEncoder.encode(request.getPassword()));
+        var roles =  roleRepository.findAllById(request.getRoles());
+        user.setRoles(new HashSet<>(roles));
         return userMapper.toUserResponse(userRepository.save(user));
     }
 
