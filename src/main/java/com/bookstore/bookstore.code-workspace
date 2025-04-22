@@ -2,6 +2,9 @@
 	"folders": [
 		{
 			"path": "../../../../.."
+		},
+		{
+			"path": "../../../../../../bookstore-app"
 		}
 	],
 	"settings": {
