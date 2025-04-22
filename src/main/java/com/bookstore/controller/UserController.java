@@ -22,7 +22,7 @@ import lombok.AccessLevel;
 import java.util.List;
 
 
-
+@CrossOrigin(origins = "http://localhost:5173")
 @RestController
 @RequestMapping("/users")
 @RequiredArgsConstructor
@@ -47,7 +47,7 @@ public class UserController {
     @GetMapping
     ApiResponse<List<UserResponse>> getUsers(){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        log.info("Username: {}", authentication.getName());
+        //log.info("Username: {}", authentication.getName());
         authentication.getAuthorities().forEach(grantedAuthority -> log.info(grantedAuthority.getAuthority()));
         return ApiResponse.<List<UserResponse>>builder()
                 

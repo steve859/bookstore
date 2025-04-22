@@ -28,7 +28,7 @@ import com.bookstore.enums.Role;
 @EnableWebSecurity
 @EnableMethodSecurity
 public class SecurityConfig {
-    public final String[] publicEndpoints = {"/users", "/auth/token", "/auth/introspect", "/auth/logout"};
+    public final String[] publicEndpoints = {"/users", "/auth/token", "/auth/introspect", "/auth/logout", "/auth/refresh"};
     @Autowired
     private CustomJwtDecoder customJwtDecoder;
     @Bean

@@ -3,6 +3,7 @@ package com.bookstore.service;
 import com.bookstore.dto.request.AuthenticationRequest;
 import com.bookstore.dto.request.IntrospectRequest;
 import com.bookstore.dto.request.LogoutRequest;
+import com.bookstore.dto.request.RefreshRequest;
 import com.bookstore.dto.response.AuthenticationResponse;
 import com.bookstore.dto.response.IntrospectResponse;
 import com.bookstore.entity.InvalidatedToken;
@@ -21,6 +22,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.experimental.NonFinal;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.data.redis.RedisProperties.Lettuce.Cluster.Refresh;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -121,7 +123,7 @@ public class AuthenticationService {
         InvalidatedToken invalidatedToken = InvalidatedToken.builder()
             .id(jit)
             .expiryTime(expiryDate)
-        .build();
+            .build();
         invalidatedRepository.save(invalidatedToken);
     }
 
@@ -137,5 +139,25 @@ public class AuthenticationService {
         if(invalidatedRepository.existsById(signedJWT.getJWTClaimsSet().getJWTID()))
             throw new AppException(ErrorCode.UNAUTHENTICATED);
         return signedJWT ;
+    }
+
+    public AuthenticationResponse refreshToken(RefreshRequest request) throws ParseException, JOSEException{
+        var signJWT = verifyToken(request.getToken());
+        var jit = signJWT.getJWTClaimsSet().getJWTID();
+        var expiryTime = signJWT.getJWTClaimsSet().getExpirationTime();
+        InvalidatedToken invalidatedToken = InvalidatedToken.builder()
+            .id(jit)
+            .expiryTime(expiryTime)
+        .build();
+        invalidatedRepository.save(invalidatedToken); // thao tac tim va vo hieu hoa token
+
+        var username = signJWT.getJWTClaimsSet().getSubject();
+        User user = userRepository.findByUsername(username).orElseThrow(() -> new AppException(ErrorCode.UNAUTHENTICATED));
+        var token = generateToken(user);
+        return AuthenticationResponse.builder()
+            .token(token)
+            .authenticated(true)    
+            .build(); // tao va tra ve token moi 
+
     }
 }

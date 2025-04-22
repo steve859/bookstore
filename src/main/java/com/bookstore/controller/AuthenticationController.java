@@ -4,6 +4,7 @@ import com.bookstore.dto.request.ApiResponse;
 import com.bookstore.dto.request.AuthenticationRequest;
 import com.bookstore.dto.request.IntrospectRequest;
 import com.bookstore.dto.request.LogoutRequest;
+import com.bookstore.dto.request.RefreshRequest;
 import com.bookstore.dto.response.AuthenticationResponse;
 import com.bookstore.dto.response.IntrospectResponse;
 import com.bookstore.service.AuthenticationService;
@@ -16,6 +17,7 @@ import lombok.experimental.FieldDefaults;
 import java.text.ParseException;
 
 import org.hibernate.annotations.Filter;
+import org.springframework.boot.autoconfigure.data.redis.RedisProperties.Lettuce.Cluster.Refresh;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -53,4 +55,15 @@ public class AuthenticationController {
         return ApiResponse.<Void>builder()
         .build();
     }
+
+    @PostMapping("/refresh")
+    ApiResponse<AuthenticationResponse> refreshToken(@RequestBody RefreshRequest authenticationRequest) 
+        throws ParseException, JOSEException {
+        var res = authenticationService.refreshToken(authenticationRequest);
+        return ApiResponse.<AuthenticationResponse>builder()
+                .code(1000)
+                .result(res)
+                .build();
+    }
+
 }
