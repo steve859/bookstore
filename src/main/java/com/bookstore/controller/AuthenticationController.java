@@ -3,6 +3,7 @@ package com.bookstore.controller;
 import com.bookstore.dto.request.ApiResponse;
 import com.bookstore.dto.request.AuthenticationRequest;
 import com.bookstore.dto.request.IntrospectRequest;
+import com.bookstore.dto.request.LogoutRequest;
 import com.bookstore.dto.response.AuthenticationResponse;
 import com.bookstore.dto.response.IntrospectResponse;
 import com.bookstore.service.AuthenticationService;
@@ -39,12 +40,17 @@ public class AuthenticationController {
     }
     
     @PostMapping("/introspect")
-    ApiResponse<IntrospectResponse> introspect(@RequestBody IntrospectRequest request) throws JOSEException, ParseException{
-        var res = authenticationService.introspect(request);
+    ApiResponse<IntrospectResponse> authenticate(@RequestBody IntrospectRequest request) throws ParseException, JOSEException {
+        var result = authenticationService.introspect(request);
         return ApiResponse.<IntrospectResponse>builder()
-            .result(res)
-            .code(1000)
+                .result(result)
+                .build();
+    }
+
+    @PostMapping("/logout")
+    ApiResponse<Void> logout(@RequestBody LogoutRequest request) throws JOSEException, ParseException{
+        authenticationService.logout(request);
+        return ApiResponse.<Void>builder()
         .build();
     }
-    
 }
