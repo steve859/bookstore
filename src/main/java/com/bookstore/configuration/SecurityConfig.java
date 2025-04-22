@@ -4,6 +4,7 @@ import java.beans.BeanProperty;
 
 import javax.crypto.spec.SecretKeySpec;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -27,9 +28,9 @@ import com.bookstore.enums.Role;
 @EnableWebSecurity
 @EnableMethodSecurity
 public class SecurityConfig {
-    public final String[] publicEndpoints = {"/users", "/auth/token", "/auth/introspect"};
-    @Value("${jwt.signerKey}")
-    private String signerKey;
+    public final String[] publicEndpoints = {"/users", "/auth/token", "/auth/introspect", "/auth/logout"};
+    @Autowired
+    private CustomJwtDecoder customJwtDecoder;
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception{
         httpSecurity.authorizeHttpRequests(request -> 
@@ -38,7 +39,7 @@ public class SecurityConfig {
         .anyRequest().authenticated());
         
         httpSecurity.oauth2ResourceServer(oauth2 ->
-            oauth2.jwt(jwtConfigurer -> jwtConfigurer.decoder(jwtDecoder())
+            oauth2.jwt(jwtConfigurer -> jwtConfigurer.decoder(customJwtDecoder)
             .jwtAuthenticationConverter(jwtAuthenticationConverter()))
             .authenticationEntryPoint(new JwtAuthenticationEntryPoint())
         );
@@ -56,14 +57,14 @@ public class SecurityConfig {
         return jwtAuthenticationConverter;
     }
 
-    @Bean
-    JwtDecoder jwtDecoder(){
-        SecretKeySpec secretKeySpec = new SecretKeySpec(signerKey.getBytes(), "HS512");
-        return NimbusJwtDecoder.withSecretKey(secretKeySpec)
-            .macAlgorithm(MacAlgorithm.HS512)
-            .build()
-        ;
-    }
+    // @Bean
+    // JwtDecoder jwtDecoder(){
+    //     SecretKeySpec secretKeySpec = new SecretKeySpec(signerKey.getBytes(), "HS512");
+    //     return NimbusJwtDecoder.withSecretKey(secretKeySpec)
+    //         .macAlgorithm(MacAlgorithm.HS512)
+    //         .build()
+    //     ;
+    // }
     @Bean
     PasswordEncoder passwordEncoder(){
         return new BCryptPasswordEncoder(10);

@@ -1,0 +1,19 @@
+{
+	"folders": [
+		{
+			"path": "../../../../.."
+		}
+	],
+	"settings": {
+		"java.compile.nullAnalysis.mode": "automatic",
+		"java.configuration.updateBuildConfiguration": "automatic",
+		"java.debug.settings.onBuildFailureProceed": true,
+		"github.copilot.enable": {
+			"*": false,
+			"plaintext": false,
+			"markdown": false,
+			"scminput": false
+		},
+		"window.title": "${folderName}"
+	}
+}
