@@ -2,12 +2,15 @@ package com.bookstore.mapper;
 
 import com.bookstore.dto.request.BookCreationRequest;
 import com.bookstore.dto.response.BookResponse;
-import com.bookstore.entity.Book;
+import com.bookstore.entity.Books;
 import org.mapstruct.Mapper;
+import org.mapstruct.MappingTarget;
 
 @Mapper(componentModel = "spring")
 public interface BookMapper {
-    Book toBook(BookCreationRequest request);
-    BookResponse toBookResponse(Book book);
-    void updateBook(Book book, BookCreationRequest request);
+    Books toBook(BookCreationRequest request);
+
+    BookResponse toBookResponse(Books book);
+
+    void updateBook(@MappingTarget Books book, BookCreationRequest request);
 }

@@ -5,7 +5,7 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 
 import com.bookstore.dto.response.PermissionResponse;
-import com.bookstore.entity.Permission;
+import com.bookstore.entity.Permissions;
 import com.bookstore.mapper.PermissionMapper;
 import com.bookstore.repository.PermissionRepository;
 
@@ -21,19 +21,20 @@ import com.bookstore.dto.request.PermissionRequest;
 @Slf4j
 public class PermissionService {
     PermissionRepository permissionRepository;
-    PermissionMapper  permissionMapper;
-    public PermissionResponse create(PermissionRequest request){
-        Permission permission = permissionMapper.toPermission(request);
+    PermissionMapper permissionMapper;
+
+    public PermissionResponse create(PermissionRequest request) {
+        Permissions permission = permissionMapper.toPermission(request);
         permission = permissionRepository.save(permission);
         return permissionMapper.toPermissionResponse(permission);
     }
 
-    public List<PermissionResponse> getAll(){
+    public List<PermissionResponse> getAll() {
         var permissions = permissionRepository.findAll();
         return permissions.stream().map(permissionMapper::toPermissionResponse).toList();
     }
 
-    public void delete(String permissionName){
+    public void delete(String permissionName) {
         permissionRepository.deleteById(permissionName);
     }
 }

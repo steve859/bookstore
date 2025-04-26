@@ -2,7 +2,7 @@ package com.bookstore.service;
 
 import com.bookstore.dto.request.BookCreationRequest;
 import com.bookstore.dto.response.BookResponse;
-import com.bookstore.entity.Book;
+import com.bookstore.entity.Books;
 import com.bookstore.exception.AppException;
 import com.bookstore.exception.ErrorCode;
 import com.bookstore.mapper.BookMapper;
@@ -26,27 +26,33 @@ public class BookService {
     @Autowired
     BookRepository bookRepository;
     BookMapper bookMapper;
+
     public BookResponse createBook(BookCreationRequest request) {
-        if(request.getQuantity()>=30){
+        if (request.getQuantity() >= 30) {
             throw new AppException(ErrorCode.BOOK_QUANTITY_EXCEEDED);
         }
-        Book book = bookMapper.toBook(request);
+        Books book = bookMapper.toBook(request);
         return bookMapper.toBookResponse(bookRepository.save(book));
     }
+
     public List<BookResponse> getBooks() {
         return bookRepository.findAll().stream().map(bookMapper::toBookResponse).toList();
     }
+
     public BookResponse getBook(String bookId) {
-        return bookMapper.toBookResponse(bookRepository.findById(bookId).orElseThrow(() -> new RuntimeException("Book not found")));
+        return bookMapper.toBookResponse(
+                bookRepository.findById(bookId).orElseThrow(() -> new RuntimeException("Book not found")));
     }
+
     public void deleteBook(String bookId) {
-        Book book = bookRepository.findById(bookId).orElse(null);
-        if(book!=null) {
+        Books book = bookRepository.findById(bookId).orElse(null);
+        if (book != null) {
             bookRepository.delete(book);
         }
     }
+
     public BookResponse updateBook(String bookId, BookCreationRequest request) {
-        Book book = bookRepository.findById(bookId).orElseThrow(() -> new AppException(ErrorCode.BOOK_NOT_EXISTED));
+        Books book = bookRepository.findById(bookId).orElseThrow(() -> new AppException(ErrorCode.BOOK_NOT_EXISTED));
         bookMapper.updateBook(book, request);
         return bookMapper.toBookResponse(bookRepository.save(book));
     }
