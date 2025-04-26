@@ -1,23 +1,23 @@
 package com.bookstore.entity;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
+
+import java.io.Serializable;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Embeddable;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
-import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
 
+@Embeddable
 @Data
-@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-@Entity
-public class Permission {
-    @Id
-    String name;
-    String description;
+class UsersRoles implements Serializable {
+    @Column(name = "user_id")
+    Integer userId;
+    @Column(name = "role_name")
+    String roleName;
 }
-

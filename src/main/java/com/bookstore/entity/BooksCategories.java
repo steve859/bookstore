@@ -1,7 +1,8 @@
-package com.bookstore.dto.response;
+package com.bookstore.entity;
 
-import java.math.BigDecimal;
-
+import jakarta.persistence.EmbeddedId;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -14,11 +15,9 @@ import lombok.experimental.FieldDefaults;
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class BookResponse {
-    String id;
-    String name;
-    String author;
-    String published_year;
-    BigDecimal selling_price;
-    int quantity;
+@Entity
+@Table(name = "books_categories")
+public class BooksCategories {
+    @EmbeddedId
+    BooksCategoriesID id;
 }

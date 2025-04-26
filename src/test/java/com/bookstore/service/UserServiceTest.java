@@ -13,8 +13,8 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import com.bookstore.dto.request.UserCreationRequest;
 import com.bookstore.dto.request.UserUpdateRequest;
 import com.bookstore.dto.response.UserResponse;
-import com.bookstore.entity.Role;
-import com.bookstore.entity.User;
+import com.bookstore.entity.Roles;
+import com.bookstore.entity.Users;
 import com.bookstore.exception.AppException;
 import com.bookstore.exception.ErrorCode;
 import com.bookstore.repository.RoleRepository;
@@ -32,7 +32,7 @@ public class UserServiceTest {
     private UserRepository userRepository;
     private UserCreationRequest request;
     private UserResponse userResponse;
-    private User user;
+    private Users user;
     private LocalDate dob;
 
     @BeforeEach
@@ -53,7 +53,7 @@ public class UserServiceTest {
                 .dob(dob)
                 .build();
 
-        user = User.builder()
+        user = Users.builder()
                 .id("cf0600f538b3")
                 .username("john")
                 .firstName("John")
@@ -99,7 +99,7 @@ public class UserServiceTest {
                 .build();
 
         when(userRepository.findById(anyString())).thenReturn(java.util.Optional.of(user));
-        when(roleRepository.findAllById(any())).thenReturn(List.of(new Role("ADMIN", null, null)));
+        when(roleRepository.findAllById(any())).thenReturn(List.of(new Roles("ADMIN", null, null)));
         when(userRepository.save(any())).thenReturn(user);
 
         var response = userService.updateUser("cf0600f538b3", updateRequest);

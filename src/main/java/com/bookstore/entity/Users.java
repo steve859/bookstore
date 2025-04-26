@@ -1,10 +1,12 @@
 package com.bookstore.entity;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToMany;
+import jakarta.persistence.Table;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -15,24 +17,39 @@ import lombok.experimental.FieldDefaults;
 import java.time.LocalDate;
 import java.util.Set;
 
-
 @Entity
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class User {
+@Table(name = "users")
+public class Users {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
+    @Column(name = "user_id")
     String id;
+
+    @Column(name = "username")
     String username;
+
+    @Column(name = "password")
     String password;
+
+    @Column(name = "first_name")
     String firstName;
+
+    @Column(name = "last_name")
     String lastName;
+
+    @Column(name = "email")
     String email;
+
+    @Column(name = "phone")
     String phone;
+
+    @Column(name = "dob")
     LocalDate dob;
     @ManyToMany
-    Set<Role> roles;
+    Set<Roles> roles;
 }
