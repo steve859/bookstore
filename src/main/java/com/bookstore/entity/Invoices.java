@@ -1,5 +1,6 @@
 package com.bookstore.entity;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 
 import jakarta.persistence.Column;
@@ -38,11 +39,11 @@ public class Invoices {
     LocalDate createAt;
 
     @Column(precision = 10, scale = 2, name = "total_amount")
-    Double totalAmount;
+    BigDecimal totalAmount;
 
     @Column(precision = 10, scale = 2, name = "paid_amount")
-    Double paidAmount;
+    BigDecimal paidAmount;
 
     @Column(precision = 10, scale = 2, name = "debt_amount")
-    Double debtAmount;
+    BigDecimal debtAmount;
 }
