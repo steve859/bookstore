@@ -5,12 +5,13 @@ server:
 
 spring:
   datasource:
-    url: "jdbc:mysql://localhost:3306/bookstore_app"
+    url: "jdbc:mysql://localhost:3306/bookstore"
+    driverClassName: "com.mysql.cj.jdbc.Driver"
     username: root
     password: root
   jpa:
-    # hibernate:
-    #   ddl-auto: update
+    hibernate:
+      ddl-auto: update
     show-sql: true
 jwt:
   signerKey: "hqAeVDopETSm5Z0U2oeM/U7Vvhku1WvewDyOkjWKGTQZmBam4rwO+58RWpv0Rul3"
