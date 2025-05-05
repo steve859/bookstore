@@ -15,7 +15,7 @@ import lombok.experimental.FieldDefaults;
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-class UsersRoles implements Serializable {
+class UsersRolesID implements Serializable {
     @Column(name = "user_id")
     Integer userId;
     @Column(name = "role_name")
