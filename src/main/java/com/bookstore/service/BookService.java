@@ -39,19 +39,19 @@ public class BookService {
         return bookRepository.findAll().stream().map(bookMapper::toBookResponse).toList();
     }
 
-    public BookResponse getBook(String bookId) {
+    public BookResponse getBook(Integer bookId) {
         return bookMapper.toBookResponse(
                 bookRepository.findById(bookId).orElseThrow(() -> new RuntimeException("Book not found")));
     }
 
-    public void deleteBook(String bookId) {
+    public void deleteBook(Integer bookId) {
         Books book = bookRepository.findById(bookId).orElse(null);
         if (book != null) {
             bookRepository.delete(book);
         }
     }
 
-    public BookResponse updateBook(String bookId, BookCreationRequest request) {
+    public BookResponse updateBook(Integer bookId, BookCreationRequest request) {
         Books book = bookRepository.findById(bookId).orElseThrow(() -> new AppException(ErrorCode.BOOK_NOT_EXISTED));
         bookMapper.updateBook(book, request);
         return bookMapper.toBookResponse(bookRepository.save(book));

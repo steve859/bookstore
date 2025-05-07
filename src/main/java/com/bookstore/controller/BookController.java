@@ -5,6 +5,7 @@ import com.bookstore.dto.request.BookCreationRequest;
 import com.bookstore.dto.response.BookResponse;
 import com.bookstore.dto.response.UserResponse;
 import com.bookstore.entity.Books;
+import com.bookstore.dto.request.ApiResponse;
 import com.bookstore.repository.BookRepository;
 import com.bookstore.service.BookService;
 import lombok.AccessLevel;
@@ -42,18 +43,18 @@ public class BookController {
     }
 
     @GetMapping("/{bookId}")
-    ApiResponse<BookResponse> getBook(@PathVariable("bookId") String bookId) {
+    ApiResponse<BookResponse> getBook(@PathVariable("bookId") Integer bookId) {
         return ApiResponse.<BookResponse>builder().result(bookService.getBook(bookId)).build();
     }
 
     @PutMapping("/{bookId}")
-    ApiResponse<BookResponse> updateBook(@PathVariable("bookId") String bookId,
+    ApiResponse<BookResponse> updateBook(@PathVariable("bookId") Integer bookId,
             @RequestBody BookCreationRequest request) {
         return ApiResponse.<BookResponse>builder().result(bookService.updateBook(bookId, request)).build();
     }
 
     @DeleteMapping("/{bookId}")
-    ApiResponse<String> deleteBook(@PathVariable("bookId") String bookId) {
+    ApiResponse<String> deleteBook(@PathVariable("bookId") Integer bookId) {
         bookService.deleteBook(bookId);
         return ApiResponse.<String>builder().result("Book has been deleted").build();
     }

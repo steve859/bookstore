@@ -1,23 +1,23 @@
 package com.bookstore.entity;
 
-import jakarta.persistence.EmbeddedId;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
+import java.io.Serializable;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Embeddable;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
 
+@Embeddable
 @Data
-@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-@Entity
-@Table(name = "book_invoices_details")
-public class BooksInvoicesDetails {
-    @EmbeddedId
-    BooksInvoicesDetailsID id;
+class BooksInvoicesID implements Serializable {
+    @Column(name = "book_id")
+    Integer bookId;
+    @Column(name = "invoice_id")
+    Integer invoiceId;
 }

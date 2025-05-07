@@ -2,12 +2,16 @@ package com.bookstore.entity;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.HashSet;
+import java.util.Set;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -37,4 +41,8 @@ public class ImportReceipts {
 
     @Column(name = "total_amount", precision = 10, scale = 2)
     BigDecimal totalAmount;
+
+    @OneToMany(mappedBy = "importReceipt", cascade = CascadeType.ALL, orphanRemoval = true)
+    Set<BooksImportReceipts> bookDetails = new HashSet<>();
+
 }

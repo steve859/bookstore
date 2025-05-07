@@ -1,7 +1,11 @@
 package com.bookstore.entity;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -21,4 +25,7 @@ public class Permissions {
     @Id
     String name;
     String description;
+    @ManyToMany(mappedBy = "permissions")
+    Set<Roles> roles = new HashSet<>();
+
 }

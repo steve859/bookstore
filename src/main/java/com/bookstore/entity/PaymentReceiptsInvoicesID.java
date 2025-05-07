@@ -15,9 +15,9 @@ import lombok.experimental.FieldDefaults;
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-class RolesPermissionsID implements Serializable {
-    @Column(name = "permission_name")
-    String permissionName;
-    @Column(name = "role_name")
-    String roleName;
+public class PaymentReceiptsInvoicesID implements Serializable {
+    @Column(name = "payment_receipt_id")
+    Integer paymentReceiptId;
+    @Column(name = "invoice_id")
+    Integer invoiceId;
 }

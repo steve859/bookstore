@@ -15,9 +15,9 @@ import lombok.experimental.FieldDefaults;
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-class BooksInvoicesDetailsID implements Serializable {
+class BooksImportReceiptsID implements Serializable {
     @Column(name = "book_id")
     Integer bookId;
-    @Column(name = "invoice_id")
-    Integer invoiceId;
+    @Column(name = "import_receipt_id")
+    Integer importReceiptId;
 }

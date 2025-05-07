@@ -1,5 +1,8 @@
 package com.bookstore.entity;
 
+import java.math.BigDecimal;
+
+import jakarta.persistence.Column;
 import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
@@ -11,13 +14,15 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
 
 @Entity
-@FieldDefaults(level = AccessLevel.PRIVATE)
 @Data
 @Builder
-@AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "users_roles")
-public class UsersRoles {
+@AllArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE)
+@Table(name = "payment_receipts_invoices")
+public class PaymentReceiptsInvoices {
     @EmbeddedId
-    UsersRoles id;
+    PaymentReceiptsInvoicesID id;
+    @Column(name = "paid_amount", precision = 10, scale = 2)
+    BigDecimal paidAmount;
 }

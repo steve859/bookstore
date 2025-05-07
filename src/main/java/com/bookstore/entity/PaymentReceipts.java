@@ -22,7 +22,7 @@ import lombok.experimental.FieldDefaults;
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-@Table(name = "invoices")
+@Table(name = "payment_receipts")
 public class PaymentReceipts {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
