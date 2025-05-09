@@ -1,6 +1,7 @@
 package com.bookstore.service;
 
 import com.bookstore.dto.request.BookCreationRequest;
+import com.bookstore.dto.request.BookUpdateRequest;
 import com.bookstore.dto.response.BookResponse;
 import com.bookstore.entity.Books;
 import com.bookstore.exception.AppException;
@@ -51,7 +52,7 @@ public class BookService {
         }
     }
 
-    public BookResponse updateBook(Integer bookId, BookCreationRequest request) {
+    public BookResponse updateBook(Integer bookId, BookUpdateRequest request) {
         Books book = bookRepository.findById(bookId).orElseThrow(() -> new AppException(ErrorCode.BOOK_NOT_EXISTED));
         bookMapper.updateBook(book, request);
         return bookMapper.toBookResponse(bookRepository.save(book));

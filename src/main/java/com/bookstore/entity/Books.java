@@ -43,5 +43,4 @@ public class Books {
     Set<Authors> authors = new HashSet<>();
     @OneToMany(mappedBy = "book", cascade = CascadeType.ALL, orphanRemoval = true)
     Set<BooksImportReceipts> importDetails = new HashSet<>();
-
 }

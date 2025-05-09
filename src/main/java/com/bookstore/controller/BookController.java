@@ -2,6 +2,7 @@ package com.bookstore.controller;
 
 import com.bookstore.dto.request.ApiResponse;
 import com.bookstore.dto.request.BookCreationRequest;
+import com.bookstore.dto.request.BookUpdateRequest;
 import com.bookstore.dto.response.BookResponse;
 import com.bookstore.dto.response.UserResponse;
 import com.bookstore.entity.Books;
@@ -49,7 +50,7 @@ public class BookController {
 
     @PutMapping("/{bookId}")
     ApiResponse<BookResponse> updateBook(@PathVariable("bookId") Integer bookId,
-            @RequestBody BookCreationRequest request) {
+            @RequestBody BookUpdateRequest request) {
         return ApiResponse.<BookResponse>builder().result(bookService.updateBook(bookId, request)).build();
     }
 
