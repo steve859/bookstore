@@ -19,6 +19,8 @@ public enum ErrorCode {
     BOOK_QUANTITY_EXCEEDED(1009, "Book quantity exceeded", HttpStatus.BAD_REQUEST),
     BOOK_NOT_EXISTED(1010, "Book not existed", HttpStatus.NOT_FOUND),
     AUTHOR_NOT_EXISTED(1011, "Author not existed", HttpStatus.NOT_FOUND),
+    CATEGORY_NOT_EXISTED(1012, "Category not existed", HttpStatus.NOT_FOUND),
+    IMPORT_RECEIPT_NOT_EXISTED(1013, "Import receipt not found", HttpStatus.NOT_FOUND),
     ;
 
     ErrorCode(int code, String message, HttpStatusCode statusCode) {
