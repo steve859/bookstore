@@ -1,5 +1,6 @@
 package com.bookstore.service;
 
+import com.bookstore.constant.PredefinedRole;
 import com.bookstore.dto.request.ApiResponse;
 import com.bookstore.dto.request.UserUpdateRequest;
 import com.bookstore.dto.response.UserResponse;
@@ -16,13 +17,18 @@ import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 
 import com.bookstore.dto.request.UserCreationRequest;
+
+import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.bookstore.enums.*;
 import com.bookstore.entity.Roles;
 import java.util.HashSet;
@@ -46,10 +52,14 @@ public class UserService {
         Users user = userMapper.toUser(request);
         PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10);
         user.setPassword(passwordEncoder.encode(request.getPassword()));
-
-        HashSet<String> roles = new HashSet<>();
-        roles.add(com.bookstore.enums.Role.USER.name());
-        // user.setRoles(roles);
+        HashSet<Roles> roles = new HashSet<>();
+        roleRepository.findById(PredefinedRole.USER_ROLE).ifPresent(roles::add);
+        user.setRoles(roles);
+        try {
+            user = userRepository.save(user);
+        } catch (DataIntegrityViolationException exception) {
+            throw new AppException(ErrorCode.USER_EXISTED);
+        }
 
         return userMapper.toUserResponse(userRepository.save(user));
     }
@@ -84,11 +94,16 @@ public class UserService {
         }
     }
 
+    @Transactional(readOnly = true)
     public UserResponse getMyInfo() {
         var context = SecurityContextHolder.getContext();
         String name = context.getAuthentication().getName();
         Users user = userRepository.findByUsername(name).orElseThrow(
                 () -> new AppException(ErrorCode.USER_NOT_EXISTED));
+        Hibernate.initialize(user.getRoles());
+        user.getRoles()
+                .forEach(role -> log.debug("Role Name: {}, Description: {}", role.getName(), role.getDescription()));
+
         return userMapper.toUserResponse(user);
     }
 }

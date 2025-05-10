@@ -3,6 +3,7 @@ package com.bookstore.entity;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -21,6 +22,8 @@ import lombok.experimental.FieldDefaults;
 import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
+
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Entity
 @FieldDefaults(level = AccessLevel.PRIVATE)
@@ -55,11 +58,12 @@ public class Users {
 
     @Column(name = "dob")
     LocalDate dob;
-    @ManyToMany
-    @JoinTable(
-        name = "users_roles",
-        joinColumns = @JoinColumn(name = "user_id"),
-        inverseJoinColumns = @JoinColumn(name = "role_name")
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "users_roles", // Tên bảng trung gian
+            joinColumns = @JoinColumn(name = "user_id"), // Khóa ngoại từ bảng `users`
+            inverseJoinColumns = @JoinColumn(name = "role_name") // Khóa ngoại từ bảng `roles`
     )
+    @JsonManagedReference
     Set<Roles> roles = new HashSet<>();
+
 }

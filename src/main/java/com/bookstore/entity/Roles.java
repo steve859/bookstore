@@ -3,9 +3,12 @@ package com.bookstore.entity;
 import java.util.HashSet;
 import java.util.Set;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
@@ -16,7 +19,9 @@ import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 import lombok.experimental.FieldDefaults;
 
 @Data
@@ -29,18 +34,16 @@ import lombok.experimental.FieldDefaults;
 public class Roles {
     @Id
     @Column(name = "role_name")
-    String roleName;
+    String name;
     @Column(name = "role_description")
-    String roleDescription;
-    @ManyToMany
-    @JoinTable(
-        name = "roles_permissions",
-        joinColumns = @JoinColumn(name = "role_name"),
-        inverseJoinColumns = @JoinColumn(name = "permission_name")
-    )
+    String description;
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "roles_permissions", joinColumns = @JoinColumn(name = "role_name"), inverseJoinColumns = @JoinColumn(name = "permission_name"))
     Set<Permissions> permissions = new HashSet<>();
     @ManyToMany(mappedBy = "roles")
+    @JsonBackReference
     Set<Users> users = new HashSet<>();
-
 
 }

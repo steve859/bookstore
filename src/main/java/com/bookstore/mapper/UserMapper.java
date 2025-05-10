@@ -8,7 +8,7 @@ import com.bookstore.dto.request.UserUpdateRequest;
 import org.mapstruct.*;
 import org.springframework.stereotype.Component;
 
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = "spring", uses = RoleMapper.class)
 public interface UserMapper {
     Users toUser(UserCreationRequest request);
 

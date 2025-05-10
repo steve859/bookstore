@@ -1,5 +1,8 @@
 package com.bookstore.mapper;
 
+import java.util.List;
+import java.util.Set;
+
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
@@ -12,5 +15,8 @@ public interface RoleMapper {
     @Mapping(target = "permissions", ignore = true)
     Roles toRole(RoleRequest roleRequest);
 
+    @Mapping(source = "permissions", target = "permissions")
     RoleResponse toRoleResponse(Roles role);
+
+    List<RoleResponse> toRoleResponseList(Set<Roles> roles);
 }

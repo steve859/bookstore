@@ -3,11 +3,13 @@ package com.bookstore.service;
 import java.security.Permission;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.stereotype.Service;
 
 import com.bookstore.dto.request.RoleRequest;
 import com.bookstore.dto.response.RoleResponse;
+import com.bookstore.entity.Roles;
 import com.bookstore.mapper.RoleMapper;
 import com.bookstore.repository.PermissionRepository;
 import com.bookstore.repository.RoleRepository;
@@ -25,7 +27,8 @@ public class RoleService {
     RoleRepository roleRepository;
     RoleMapper roleMapper;
     PermissionRepository permissionRepository;
-    public RoleResponse create(RoleRequest request){
+
+    public RoleResponse create(RoleRequest request) {
         var role = roleMapper.toRole(request);
         var permissions = permissionRepository.findAllById(request.getPermissions());
         role.setPermissions(new HashSet<>(permissions));
@@ -33,12 +36,13 @@ public class RoleService {
         return roleMapper.toRoleResponse(role);
     }
 
-    public List<RoleResponse> getAll(){
+    public List<RoleResponse> getAll() {
         return roleRepository.findAll()
-        .stream().map(roleMapper::toRoleResponse)
-        .toList();
+                .stream().map(roleMapper::toRoleResponse)
+                .toList();
     }
-    public void delete(String role){
+
+    public void delete(String role) {
         roleRepository.deleteById(role);
     }
 }

@@ -33,7 +33,6 @@ public class UserController {
     @PostMapping
     ApiResponse<UserResponse> createUser(@RequestBody @Valid UserCreationRequest request) {
         return ApiResponse.<UserResponse>builder()
-
                 .result(userService.createUser(request))
                 .build();
     }
@@ -68,7 +67,6 @@ public class UserController {
     @GetMapping("/myinfo")
     ApiResponse<UserResponse> getMyInfo() {
         return ApiResponse.<UserResponse>builder()
-
                 .result(userService.getMyInfo())
                 .build();
     }
