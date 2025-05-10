@@ -30,27 +30,32 @@ public class ImportReceiptController {
 
     @PostMapping
     ApiResponse<ImportReceiptRespones> createImportReceipt(@RequestBody ImportReceiptCreationRequest request) {
-        return ApiResponse.<ImportReceiptRespones>builder().result(importReceiptService.createImportReceipt(request)).build();
+        return ApiResponse.<ImportReceiptRespones>builder().result(importReceiptService.createImportReceipt(request))
+                .build();
     }
 
     @GetMapping
     ApiResponse<List<ImportReceiptRespones>> getImportReceipts() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         authentication.getAuthorities().forEach(grantedAuthority -> log.info(grantedAuthority.getAuthority()));
-        return ApiResponse.<List<ImportReceiptRespones>>builder().result(importReceiptService.getImportReceipts()).build();
+        return ApiResponse.<List<ImportReceiptRespones>>builder().result(importReceiptService.getImportReceipts())
+                .build();
     }
 
-    @GetMapping("{/importReceiptId}")
+    @GetMapping("/{importReceiptId}")
     ApiResponse<ImportReceiptRespones> getImportReceipt(@PathVariable("importReceiptId") Integer importReceiptId) {
-        return ApiResponse.<ImportReceiptRespones>builder().result(importReceiptService.getImportReceipt(importReceiptId)).build();
+        return ApiResponse.<ImportReceiptRespones>builder()
+                .result(importReceiptService.getImportReceipt(importReceiptId)).build();
     }
 
-    @PutMapping("{/importReceiptId}")
-    ApiResponse<ImportReceiptRespones> updateImportReceipt(@PathVariable("importReceiptId") Integer importReceiptId, @RequestBody ImportReceiptUpdateRequest request) {
-        return ApiResponse.<ImportReceiptRespones>builder().result(importReceiptService.updateImportReceipt(importReceiptId, request)).build();
+    @PutMapping("/{importReceiptId}")
+    ApiResponse<ImportReceiptRespones> updateImportReceipt(@PathVariable("importReceiptId") Integer importReceiptId,
+            @RequestBody ImportReceiptUpdateRequest request) {
+        return ApiResponse.<ImportReceiptRespones>builder()
+                .result(importReceiptService.updateImportReceipt(importReceiptId, request)).build();
     }
 
-    @DeleteMapping("{/importReceiptId}")
+    @DeleteMapping("/{importReceiptId}")
     ApiResponse<String> deleteImportReceipt(@PathVariable("importReceiptId") Integer importReceiptId) {
         importReceiptService.deleteImportReceipt(importReceiptId);
         return ApiResponse.<String>builder().result("Deleted has been deleted").build();

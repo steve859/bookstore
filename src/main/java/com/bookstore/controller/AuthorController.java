@@ -29,29 +29,32 @@ public class AuthorController {
     private AuthorService authorService;
 
     @PostMapping
-    ApiResponse<AuthorResponse> createAuthor(@RequestBody AuthorCreationRequest request){
+    ApiResponse<AuthorResponse> createAuthor(@RequestBody AuthorCreationRequest request) {
         return ApiResponse.<AuthorResponse>builder().result(authorService.createAuthor(request)).build();
     }
 
     @GetMapping
-    ApiResponse<List<AuthorResponse>> getAuthors(){
+    ApiResponse<List<AuthorResponse>> getAuthors() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        authentication.getAuthorities().forEach(grantedAuthority -> {log.info(grantedAuthority.getAuthority());});
+        authentication.getAuthorities().forEach(grantedAuthority -> {
+            log.info(grantedAuthority.getAuthority());
+        });
         return ApiResponse.<List<AuthorResponse>>builder().result(authorService.getAuthors()).build();
     }
 
-    @GetMapping("{/authorId}")
-    ApiResponse<AuthorResponse> getAuthor(@PathVariable("authorId") Integer authorId){
+    @GetMapping("/{authorId}")
+    ApiResponse<AuthorResponse> getAuthor(@PathVariable("authorId") Integer authorId) {
         return ApiResponse.<AuthorResponse>builder().result(authorService.getAuthor(authorId)).build();
     }
 
-    @PutMapping("{/authorId}")
-    ApiResponse<AuthorResponse> updateAuthor(@PathVariable("authorId") Integer authorId, @RequestBody AuthorUpdateRequest request){
+    @PutMapping("/{authorId}")
+    ApiResponse<AuthorResponse> updateAuthor(@PathVariable("authorId") Integer authorId,
+            @RequestBody AuthorUpdateRequest request) {
         return ApiResponse.<AuthorResponse>builder().result(authorService.updateAuthor(authorId, request)).build();
     }
 
-    @DeleteMapping("{/authorId}")
-    ApiResponse<String> deleteAuthor(@PathVariable("authorId") Integer authorId){
+    @DeleteMapping("/{authorId}")
+    ApiResponse<String> deleteAuthor(@PathVariable("authorId") Integer authorId) {
         authorService.deleteAuthor(authorId);
         return ApiResponse.<String>builder().result("Author has been deleted").build();
     }

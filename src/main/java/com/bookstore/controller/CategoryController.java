@@ -38,17 +38,19 @@ public class CategoryController {
         return ApiResponse.<List<CategoryResponse>>builder().result(categoryService.getCategories()).build();
     }
 
-    @GetMapping("{/categoryId}")
+    @GetMapping("/{categoryId}")
     ApiResponse<CategoryResponse> getCategory(@PathVariable("categoryId") Integer categoryId) {
         return ApiResponse.<CategoryResponse>builder().result(categoryService.getCategory(categoryId)).build();
     }
 
-    @PutMapping("{/categoryId}")
-    ApiResponse<CategoryResponse> updateCategory(@PathVariable("categoryId") Integer categoryId, @RequestBody CategoryUpdateRequest request) {
-        return ApiResponse.<CategoryResponse>builder().result(categoryService.updateCategory(categoryId, request)).build();
+    @PutMapping("/{categoryId}")
+    ApiResponse<CategoryResponse> updateCategory(@PathVariable("categoryId") Integer categoryId,
+            @RequestBody CategoryUpdateRequest request) {
+        return ApiResponse.<CategoryResponse>builder().result(categoryService.updateCategory(categoryId, request))
+                .build();
     }
 
-    @DeleteMapping("{/categoryId}")
+    @DeleteMapping("/{categoryId}")
     ApiResponse<String> deleteCategory(@PathVariable("categoryId") Integer categoryId) {
         categoryService.deleteCategory(categoryId);
         return ApiResponse.<String>builder().result("Category has been deleted").build();

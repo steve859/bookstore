@@ -5,6 +5,7 @@ import com.bookstore.dto.request.CategoryUpdateRequest;
 import com.bookstore.dto.response.CategoryResponse;
 import com.bookstore.entity.Categories;
 import org.mapstruct.Mapper;
+import org.mapstruct.MappingTarget;
 
 @Mapper(componentModel = "spring")
 public interface CategoryMapper {
