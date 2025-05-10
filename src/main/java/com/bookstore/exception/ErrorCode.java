@@ -20,7 +20,9 @@ public enum ErrorCode {
     BOOK_NOT_EXISTED(1010, "Book not existed", HttpStatus.NOT_FOUND),
     AUTHOR_NOT_EXISTED(1011, "Author not existed", HttpStatus.NOT_FOUND),
     CATEGORY_NOT_EXISTED(1012, "Category not existed", HttpStatus.NOT_FOUND),
-    IMPORT_RECEIPT_NOT_EXISTED(1013, "Import receipt not found", HttpStatus.NOT_FOUND),
+    IMPORT_RECEIPT_NOT_EXISTED(1013, "Import receipt not existed", HttpStatus.NOT_FOUND),
+    INVOICE_NOT_EXISTED(1014, "Invoice not existed", HttpStatus.NOT_FOUND),
+    PAYMENT_RECEIPT_NOT_EXISTED(1015, "Payment receipt not existed", HttpStatus.NOT_FOUND),
     ;
 
     ErrorCode(int code, String message, HttpStatusCode statusCode) {
