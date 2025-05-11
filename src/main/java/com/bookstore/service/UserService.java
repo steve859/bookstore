@@ -98,12 +98,12 @@ public class UserService {
     public UserResponse getMyInfo() {
         var context = SecurityContextHolder.getContext();
         String name = context.getAuthentication().getName();
+        log.info("Authenticated username: {}", name);
         Users user = userRepository.findByUsername(name).orElseThrow(
                 () -> new AppException(ErrorCode.USER_NOT_EXISTED));
         Hibernate.initialize(user.getRoles());
-        user.getRoles()
-                .forEach(role -> log.debug("Role Name: {}, Description: {}", role.getName(), role.getDescription()));
-
+        log.info("Roles: {}", user.getRoles());
+        Hibernate.initialize(user.getRoles());
         return userMapper.toUserResponse(user);
     }
 }

@@ -1,9 +1,7 @@
 package com.bookstore.configuration;
 
-import java.beans.BeanProperty;
 import java.util.HashSet;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
@@ -14,7 +12,6 @@ import com.bookstore.constant.PredefinedRole;
 import com.bookstore.entity.Roles;
 import com.bookstore.entity.Users;
 
-import com.bookstore.enums.Role;
 import com.bookstore.repository.RoleRepository;
 import com.bookstore.repository.UserRepository;
 
@@ -36,6 +33,11 @@ public class ApplicationInitConfig {
 
     @Bean
     @ConditionalOnProperty(prefix = "spring", value = "datasource.driverClassName", havingValue = "com.mysql.cj.jdbc.Driver")
+    // This code snippet defines a bean named `applicationRunner` of type
+    // `ApplicationRunner` in a
+    // Spring configuration class. The `ApplicationRunner` interface in Spring Boot
+    // allows you to
+    // execute code when the application is started.
     ApplicationRunner applicationRunner(UserRepository userRepository) {
         log.info("initializing application");
         return args -> {

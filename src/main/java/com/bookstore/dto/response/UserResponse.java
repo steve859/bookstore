@@ -6,8 +6,6 @@ import lombok.experimental.FieldDefaults;
 import java.time.LocalDate;
 import java.util.Set;
 
-import com.bookstore.entity.Roles;
-
 @Data
 @Builder
 @NoArgsConstructor

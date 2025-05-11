@@ -4,7 +4,6 @@ import com.bookstore.dto.request.ApiResponse;
 import com.bookstore.dto.request.AuthorCreationRequest;
 import com.bookstore.dto.request.AuthorUpdateRequest;
 import com.bookstore.dto.response.AuthorResponse;
-import com.bookstore.repository.AuthorRepository;
 import com.bookstore.service.AuthorService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -23,8 +22,6 @@ import java.util.List;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @Slf4j
 public class AuthorController {
-    @Autowired
-    private AuthorRepository authorRepository;
     @Autowired
     private AuthorService authorService;
 

@@ -27,8 +27,6 @@ import java.util.List;
 @Slf4j
 public class UserController {
     private UserService userService;
-    private UserMapper userMapper;
-    private UserRepository userRepository;
 
     @PostMapping
     ApiResponse<UserResponse> createUser(@RequestBody @Valid UserCreationRequest request) {
@@ -43,7 +41,6 @@ public class UserController {
         // log.info("Username: {}", authentication.getName());
         authentication.getAuthorities().forEach(grantedAuthority -> log.info(grantedAuthority.getAuthority()));
         return ApiResponse.<List<UserResponse>>builder()
-
                 .result(userService.getUsers())
                 .build();
     }
@@ -51,7 +48,6 @@ public class UserController {
     @GetMapping("/{userId}")
     ApiResponse<UserResponse> getUser(@PathVariable("userId") String userId) {
         return ApiResponse.<UserResponse>builder()
-
                 .result(userService.getUser(userId))
                 .build();
     }
@@ -59,7 +55,6 @@ public class UserController {
     @PutMapping("/{userId}")
     ApiResponse<UserResponse> updateUser(@PathVariable String userId, @RequestBody UserUpdateRequest request) {
         return ApiResponse.<UserResponse>builder()
-
                 .result(userService.updateUser(userId, request))
                 .build();
     }
@@ -75,7 +70,6 @@ public class UserController {
     ApiResponse<String> deleteUser(@PathVariable String userId) {
         userService.deleteUser(userId);
         return ApiResponse.<String>builder()
-
                 .result("User has been deleted")
                 .build();
     }

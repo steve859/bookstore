@@ -31,7 +31,7 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "users")
+// @Table(name = "users")
 public class Users {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
@@ -58,12 +58,18 @@ public class Users {
 
     @Column(name = "dob")
     LocalDate dob;
-    @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(name = "users_roles", // Tên bảng trung gian
-            joinColumns = @JoinColumn(name = "user_id"), // Khóa ngoại từ bảng `users`
-            inverseJoinColumns = @JoinColumn(name = "role_name") // Khóa ngoại từ bảng `roles`
-    )
-    @JsonManagedReference
+    // @ManyToMany(fetch = FetchType.EAGER)
+    // @JoinTable(name = "users_roles", // Tên bảng trung gian
+    // joinColumns = @JoinColumn(name = "user_id"), // Khóa ngoại từ bảng `users`
+    // inverseJoinColumns = @JoinColumn(name = "role_name") // Khóa ngoại từ bảng
+    // `roles`
+    // )
+    // @JsonManagedReference
+    @ManyToMany
     Set<Roles> roles = new HashSet<>();
+
+    public Set<Roles> getRoles() {
+        return this.roles;
+    }
 
 }
