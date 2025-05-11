@@ -43,7 +43,7 @@ public class InvoiceController {
         return ApiResponse.<InvoiceResponse>builder().result(invoiceService.getInvoice(invoiceId)).build();
     }
 
-    @PutMapping("/{invoiceId")
+    @PutMapping("/{invoiceId}")
     ApiResponse<InvoiceResponse> updateInvoice(@PathVariable("invoiceId") Integer invoiceId, @RequestBody InvoiceUpdateRequest request) {
         return ApiResponse.<InvoiceResponse>builder().result(invoiceService.updateInvoice(invoiceId, request)).build();
     }
