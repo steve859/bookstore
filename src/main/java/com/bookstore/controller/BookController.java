@@ -1,24 +1,29 @@
 package com.bookstore.controller;
 
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
 import com.bookstore.dto.request.ApiResponse;
 import com.bookstore.dto.request.BookCreationRequest;
 import com.bookstore.dto.request.BookUpdateRequest;
 import com.bookstore.dto.response.BookResponse;
-import com.bookstore.dto.response.UserResponse;
-import com.bookstore.entity.Books;
-import com.bookstore.dto.request.ApiResponse;
-import com.bookstore.repository.BookRepository;
 import com.bookstore.service.BookService;
+
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/books")
@@ -26,8 +31,6 @@ import java.util.List;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @Slf4j
 public class BookController {
-    @Autowired
-    private BookRepository bookRepository;
     @Autowired
     private BookService bookService;
 

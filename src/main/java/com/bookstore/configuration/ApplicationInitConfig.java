@@ -11,25 +11,25 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import com.bookstore.constant.PredefinedRole;
 import com.bookstore.entity.Roles;
 import com.bookstore.entity.Users;
-
 import com.bookstore.repository.RoleRepository;
 import com.bookstore.repository.UserRepository;
 
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import lombok.experimental.NonFinal;
 import lombok.extern.slf4j.Slf4j;
 
 @Configuration
-@Slf4j
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
+@Slf4j
 public class ApplicationInitConfig {
-
-    private PasswordEncoder passwordEncoder;
-    private final String ADMIN_USERNAME = "admin";
-    private final String ADMIN_PASSWORD = "admin";
-    private RoleRepository roleRepository;
+    PasswordEncoder passwordEncoder;
+    @NonFinal
+    static final String ADMIN_USERNAME = "admin";
+    @NonFinal
+    static final String ADMIN_PASSWORD = "admin";
 
     @Bean
     @ConditionalOnProperty(prefix = "spring", value = "datasource.driverClassName", havingValue = "com.mysql.cj.jdbc.Driver")
@@ -38,7 +38,7 @@ public class ApplicationInitConfig {
     // Spring configuration class. The `ApplicationRunner` interface in Spring Boot
     // allows you to
     // execute code when the application is started.
-    ApplicationRunner applicationRunner(UserRepository userRepository) {
+    ApplicationRunner applicationRunner(UserRepository userRepository, RoleRepository roleRepository) {
         log.info("initializing application");
         return args -> {
             if (userRepository.findByUsername(ADMIN_USERNAME).isEmpty()) {

@@ -1,12 +1,13 @@
 package com.bookstore.mapper;
 
-import com.bookstore.dto.request.ApiResponse;
-import com.bookstore.dto.response.UserResponse;
-import com.bookstore.entity.Users;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+import org.mapstruct.MappingTarget;
+
 import com.bookstore.dto.request.UserCreationRequest;
 import com.bookstore.dto.request.UserUpdateRequest;
-import org.mapstruct.*;
-import org.springframework.stereotype.Component;
+import com.bookstore.dto.response.UserResponse;
+import com.bookstore.entity.Users;
 
 @Mapper(componentModel = "spring", uses = RoleMapper.class)
 public interface UserMapper {

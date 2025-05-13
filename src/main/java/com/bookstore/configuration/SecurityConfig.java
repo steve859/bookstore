@@ -19,7 +19,7 @@ import org.springframework.security.web.SecurityFilterChain;
 @EnableMethodSecurity
 public class SecurityConfig {
     public final String[] publicEndpoints = { "/users", "/auth/token", "/auth/introspect", "/auth/logout",
-            "/auth/refresh" };
+            "/auth/refresh", "swagger-ui.html", "swagger-ui/**" };
     @Autowired
     private CustomJwtDecoder customJwtDecoder;
 
