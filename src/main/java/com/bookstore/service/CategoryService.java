@@ -32,8 +32,17 @@ public class CategoryService {
 
     @PreAuthorize("hasRole('ADMIN')")
     public CategoryResponse createCategory(CategoryCreationRequest request) {
+        if (request == null || request.getCategoryName() == null || request.getCategoryName().isBlank()) {
+            throw new AppException(ErrorCode.INVALID_KEY);
+        }
+        boolean exists = categoryRepository.findByCategoryName(request.getCategoryName()).isPresent();
+        if (exists) {
+            throw new AppException(ErrorCode.CATEGORY_EXISTED);
+        }
         Categories category = categoryMapper.toCategory(request);
-        return categoryMapper.toCategoryResponse(categoryRepository.save(category));
+        category.setCategoryName(request.getCategoryName());
+        Categories savedCategory = categoryRepository.save(category);
+        return categoryMapper.toCategoryResponse(savedCategory);
     }
 
     public List<CategoryResponse> getCategories() {

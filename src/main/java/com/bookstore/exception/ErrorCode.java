@@ -23,7 +23,7 @@ public enum ErrorCode {
     IMPORT_RECEIPT_NOT_EXISTED(1013, "Import receipt not existed", HttpStatus.NOT_FOUND),
     INVOICE_NOT_EXISTED(1014, "Invoice not existed", HttpStatus.NOT_FOUND),
     PAYMENT_RECEIPT_NOT_EXISTED(1015, "Payment receipt not existed", HttpStatus.NOT_FOUND),
-    ;
+    CATEGORY_EXISTED(1016, "Category existed", HttpStatus.BAD_REQUEST);
 
     ErrorCode(int code, String message, HttpStatusCode statusCode) {
         this.code = code;
