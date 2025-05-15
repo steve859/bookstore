@@ -36,7 +36,10 @@ public class CategoryController {
 
     @PostMapping
     ApiResponse<CategoryResponse> createCategory(@RequestBody CategoryCreationRequest request) {
-        return ApiResponse.<CategoryResponse>builder().result(categoryService.createCategory(request)).build();
+        log.debug("Received request to create category: {}", request);
+        return ApiResponse.<CategoryResponse>builder()
+                .result(categoryService.createCategory(request))
+                .build();
     }
 
     @GetMapping

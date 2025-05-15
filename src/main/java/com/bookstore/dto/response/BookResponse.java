@@ -18,7 +18,7 @@ public class BookResponse {
     String id;
     String name;
     String author;
-    String published_year;
-    BigDecimal selling_price;
+    String publishYear;
+    BigDecimal importPrice;
     int quantity;
 }

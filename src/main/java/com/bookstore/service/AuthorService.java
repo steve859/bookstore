@@ -1,6 +1,10 @@
 package com.bookstore.service;
 
-import com.bookstore.dto.request.ApiResponse;
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import com.bookstore.dto.request.AuthorCreationRequest;
 import com.bookstore.dto.request.AuthorUpdateRequest;
 import com.bookstore.dto.response.AuthorResponse;
@@ -10,17 +14,11 @@ import com.bookstore.exception.ErrorCode;
 import com.bookstore.mapper.AuthorMapper;
 import com.bookstore.mapper.BookMapper;
 import com.bookstore.repository.AuthorRepository;
+
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -33,28 +31,30 @@ public class AuthorService {
     @Autowired
     private BookMapper bookMapper;
 
-    public AuthorResponse createAuthor(AuthorCreationRequest request){
+    public AuthorResponse createAuthor(AuthorCreationRequest request) {
         Authors author = authorMapper.toAuthor(request);
         return authorMapper.toAuthorResponse(authorRepository.save(author));
     }
 
-    public List<AuthorResponse> getAuthors(){
+    public List<AuthorResponse> getAuthors() {
         return authorRepository.findAll().stream().map(authorMapper::toAuthorResponse).toList();
     }
 
-    public AuthorResponse getAuthor(Integer authorId){
-        return authorMapper.toAuthorResponse(authorRepository.findById(authorId).orElseThrow(()->new RuntimeException("Author not found")));
+    public AuthorResponse getAuthor(Integer authorId) {
+        return authorMapper.toAuthorResponse(
+                authorRepository.findById(authorId).orElseThrow(() -> new RuntimeException("Author not found")));
     }
 
-    public AuthorResponse updateAuthor(Integer authorId, AuthorUpdateRequest request){
-        Authors author = authorRepository.findById(authorId).orElseThrow(()->new AppException(ErrorCode.AUTHOR_NOT_EXISTED));
+    public AuthorResponse updateAuthor(Integer authorId, AuthorUpdateRequest request) {
+        Authors author = authorRepository.findById(authorId)
+                .orElseThrow(() -> new AppException(ErrorCode.AUTHOR_NOT_EXISTED));
         authorMapper.updateAuthor(author, request);
         return authorMapper.toAuthorResponse(authorRepository.save(author));
     }
 
-    public void deleteAuthor(Integer authorId){
+    public void deleteAuthor(Integer authorId) {
         Authors author = authorRepository.findById(authorId).orElse(null);
-        if(author != null){
+        if (author != null) {
             authorRepository.delete(author);
         }
     }

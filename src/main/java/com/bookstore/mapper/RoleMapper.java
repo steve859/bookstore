@@ -12,6 +12,8 @@ import com.bookstore.entity.Roles;
 
 @Mapper(componentModel = "spring")
 public interface RoleMapper {
+    @Mapping(source = "name", target = "name")
+    @Mapping(source = "description", target = "description")
     @Mapping(target = "permissions", ignore = true)
     Roles toRole(RoleRequest roleRequest);
 

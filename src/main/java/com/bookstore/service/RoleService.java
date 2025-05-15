@@ -1,23 +1,20 @@
 package com.bookstore.service;
 
-import java.security.Permission;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import org.springframework.stereotype.Service;
 
 import com.bookstore.dto.request.RoleRequest;
 import com.bookstore.dto.response.RoleResponse;
-import com.bookstore.entity.Roles;
 import com.bookstore.mapper.RoleMapper;
 import com.bookstore.repository.PermissionRepository;
 import com.bookstore.repository.RoleRepository;
 
+import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
-import lombok.AccessLevel;
 
 @Service
 @RequiredArgsConstructor
@@ -28,8 +25,9 @@ public class RoleService {
     RoleMapper roleMapper;
     PermissionRepository permissionRepository;
 
-    public RoleResponse create(RoleRequest request) {
+    public RoleResponse createRole(RoleRequest request) {
         var role = roleMapper.toRole(request);
+        log.info("Role entity before save: {}", role);
         var permissions = permissionRepository.findAllById(request.getPermissions());
         role.setPermissions(new HashSet<>(permissions));
         role = roleRepository.save(role);

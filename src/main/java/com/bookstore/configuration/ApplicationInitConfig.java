@@ -25,6 +25,7 @@ import lombok.extern.slf4j.Slf4j;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @Slf4j
 public class ApplicationInitConfig {
+
     PasswordEncoder passwordEncoder;
     @NonFinal
     static final String ADMIN_USERNAME = "admin";
@@ -60,6 +61,12 @@ public class ApplicationInitConfig {
                         .build();
                 userRepository.save(user);
                 log.warn("admin user has been created with default password: admin. Please change it");
+            }
+            if (roleRepository.findById("ADMIN").isEmpty()) {
+                roleRepository.save(Roles.builder()
+                        .name("ADMIN")
+                        .description("Admin Role")
+                        .build());
             }
         };
     }

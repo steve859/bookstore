@@ -2,7 +2,6 @@ package com.bookstore.controller;
 
 import java.util.List;
 
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -30,21 +29,21 @@ public class RoleController {
     RoleService roleService;
 
     @PostMapping
-    ApiResponse<RoleResponse> create(@RequestBody RoleRequest request){
+    ApiResponse<RoleResponse> create(@RequestBody RoleRequest request) {
         return ApiResponse.<RoleResponse>builder()
-        .result(roleService.create(request))
-        .build();
+                .result(roleService.createRole(request))
+                .build();
     }
 
     @GetMapping
-    ApiResponse<List<RoleResponse>> getAll(){
+    ApiResponse<List<RoleResponse>> getAll() {
         return ApiResponse.<List<RoleResponse>>builder()
-        .result(roleService.getAll())
-        .build();
+                .result(roleService.getAll())
+                .build();
     }
-    
+
     @DeleteMapping("/{RoleId}")
-    ApiResponse<Void> delete(@PathVariable String role){
+    ApiResponse<Void> delete(@PathVariable String role) {
         roleService.delete(role);
         return ApiResponse.<Void>builder().build();
     }

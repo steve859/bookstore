@@ -1,9 +1,23 @@
 package com.bookstore.service;
 
+import java.util.HashSet;
+import java.util.List;
+
+import org.hibernate.Hibernate;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.security.access.prepost.PostAuthorize;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.bookstore.constant.PredefinedRole;
-import com.bookstore.dto.request.ApiResponse;
+import com.bookstore.dto.request.UserCreationRequest;
 import com.bookstore.dto.request.UserUpdateRequest;
 import com.bookstore.dto.response.UserResponse;
+import com.bookstore.entity.Roles;
 import com.bookstore.entity.Users;
 import com.bookstore.exception.AppException;
 import com.bookstore.exception.ErrorCode;
@@ -15,24 +29,6 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
-
-import com.bookstore.dto.request.UserCreationRequest;
-
-import org.hibernate.Hibernate;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.security.access.prepost.PostAuthorize;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import com.bookstore.enums.*;
-import com.bookstore.entity.Roles;
-import java.util.HashSet;
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
