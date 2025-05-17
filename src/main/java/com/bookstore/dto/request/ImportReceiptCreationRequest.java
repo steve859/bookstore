@@ -2,6 +2,7 @@ package com.bookstore.dto.request;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.Set;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -19,4 +20,5 @@ public class ImportReceiptCreationRequest {
     String adminId;
     LocalDate importDate;
     BigDecimal totalAmount;
+    Set<Integer> books;
 }

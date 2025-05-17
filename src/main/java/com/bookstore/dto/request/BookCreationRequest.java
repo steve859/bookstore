@@ -1,6 +1,7 @@
 package com.bookstore.dto.request;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -16,7 +17,7 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class BookCreationRequest {
     String name;
-    String author;
+    List<String> authors;
     String published_year;
     BigDecimal selling_price;
     int quantity;
