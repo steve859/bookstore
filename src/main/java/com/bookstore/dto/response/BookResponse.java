@@ -1,6 +1,7 @@
 package com.bookstore.dto.response;
 
 import java.math.BigDecimal;
+import java.util.Set;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -17,8 +18,9 @@ import lombok.experimental.FieldDefaults;
 public class BookResponse {
     String id;
     String name;
-    String author;
-    String publishYear;
+    Integer publishedYear;
     BigDecimal importPrice;
     int quantity;
+    Set<AuthorResponse> authors;
+    Set<CategoryResponse> categories;
 }

@@ -17,8 +17,9 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class BookCreationRequest {
     String name;
-    List<String> authors;
-    String published_year;
-    BigDecimal selling_price;
+    Integer publishedYear;
+    BigDecimal importPrice;
     int quantity;
+    List<String> authors;
+    List<String> categories;
 }

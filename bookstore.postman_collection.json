@@ -1,0 +1,664 @@
+{
+	"info": {
+		"_postman_id": "314a024b-e317-4d73-aaa8-adf9b41f08ac",
+		"name": "bookstore",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "42957037"
+	},
+	"item": [
+		{
+			"name": "update user",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/bookstore/users/",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"bookstore",
+						"users",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "create user",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"username\": \"Nguyen Hong Quan\",\r\n    \"password\": \"12344678\",\r\n    \"firstName\": \"Yua\",\r\n    \"lastName\": \"Mikami\",\r\n    \"dob\": \"2005-07-19\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/identity/users",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"identity",
+						"users"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "login",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"// Parse the JSON response body\r",
+							"var jsonData = pm.response.json();\r",
+							"console.log(jsonData.token)\r",
+							"// Set the access_token in the environment variable if it exists\r",
+							"if (jsonData.token) {\r",
+							"    pm.environment.set(\"access_token\", jsonData.token);\r",
+							"}\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"packages": {},
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"username\": \"admin\",\r\n    \"password\": \"admin\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/bookstore/auth/token",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"bookstore",
+						"auth",
+						"token"
+					]
+				},
+				"description": "auth token"
+			},
+			"response": [
+				{
+					"name": "login",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"username\": \"admin\",\r\n    \"password\": \"admin\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/bookstore/auth/token",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"bookstore",
+								"auth",
+								"token"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Vary",
+							"value": "Origin"
+						},
+						{
+							"key": "Vary",
+							"value": "Access-Control-Request-Method"
+						},
+						{
+							"key": "Vary",
+							"value": "Access-Control-Request-Headers"
+						},
+						{
+							"key": "X-Content-Type-Options",
+							"value": "nosniff"
+						},
+						{
+							"key": "X-XSS-Protection",
+							"value": "0"
+						},
+						{
+							"key": "Cache-Control",
+							"value": "no-cache, no-store, max-age=0, must-revalidate"
+						},
+						{
+							"key": "Pragma",
+							"value": "no-cache"
+						},
+						{
+							"key": "Expires",
+							"value": "0"
+						},
+						{
+							"key": "X-Frame-Options",
+							"value": "DENY"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Transfer-Encoding",
+							"value": "chunked"
+						},
+						{
+							"key": "Date",
+							"value": "Thu, 15 May 2025 13:16:26 GMT"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=60"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"code\": 1000,\n    \"result\": {\n        \"token\": \"eyJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJib29rc3RvcmUuY29tIiwic3ViIjoiYWRtaW4iLCJleHAiOjE3NDczMTg1ODYsImlhdCI6MTc0NzMxNDk4NiwianRpIjoiYzA1NTgwNTYtNTM0ZS00NDA3LWIyOTQtM2MyZjY3Yzg3ODkzIiwic2NvcGUiOiJST0xFX0FETUlOIE1PRElGWV9TRVRUSU5HIn0.2YbmzvscYZOTGbyRhOe87BKYGWKKzWOs7GZqHR9NbagWRWLJ7rAvTFw8fOO2d2rwJhgpT4n7m-RTqIjEFQJQpA\",\n        \"authenticated\": true\n    }\n}"
+				}
+			]
+		},
+		{
+			"name": "introspect",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"token\" : \"\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/bookstore/auth/introspect",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"bookstore",
+						"auth",
+						"introspect"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "logout",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/bookstore/auth/logout",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"bookstore",
+						"auth",
+						"logout"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "refresh token",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"token\" : \"eyJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJib29rc3RvcmUuY29tIiwic3ViIjoidGVzdGVyMSIsImV4cCI6MTc0NTM1Mjg4MiwiaWF0IjoxNzQ1MzQ5MjgyLCJqdGkiOiJjN2UwYjZhMy01ZTBjLTQzNDctYTY1ZC1iNjgyMzVhNTkyZjQiLCJzY29wZSI6IiJ9.4fRnq8tnNFc3sQCz0ldELnVRp5Gzm3NYyEuybQFYz2WSZLa7d8K7uAJpnsHZw0hs0pcaZzNqv236vq085tnHeg\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/bookstore/auth/refresh",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"bookstore",
+						"auth",
+						"refresh"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get users",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{access_token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/bookstore/users",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"bookstore",
+						"users"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "my info",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJib29rc3RvcmUuY29tIiwic3ViIjoiam9obmRvZTEyMzQiLCJleHAiOjE3NDQyOTM3NjMsImlhdCI6MTc0NDI5MDE2Mywic2NvcGUiOiJVU0VSIn0.L6awX9eQ3MiMoje4ks0qI6NJYmOhduqHxkmEXdnw085ed6T1KA-h2jGUdxbFeR2GYTpmNLbQkS9F-CWbtdIt5w",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/bookstore/users/myinfo",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"bookstore",
+						"users",
+						"myinfo"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get user by id",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/bookstore/users/",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"bookstore",
+						"users",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "create permission",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/bookstore/permission",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"bookstore",
+						"permission"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get permissions",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{access_token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"username\": \"admin\",\r\n    \"password\": \"admin\"\r\n}"
+				},
+				"url": {
+					"raw": "http://localhost:8080/bookstore/permissions",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"bookstore",
+						"permissions"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "delete permission",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/bookstore/permissions",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"bookstore",
+						"permissions"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "create role",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJib29rc3RvcmUuY29tIiwic3ViIjoiYWRtaW4iLCJleHAiOjE3NDcyOTU5NzUsImlhdCI6MTc0NzI5MjM3NSwianRpIjoiN2IwNmZjZjMtMjIzMy00ZTBkLWJkMzYtOWExZTdiODE3MzczIiwic2NvcGUiOiJST0xFX0FETUlOIn0.q2IMt2bIgQyemce47klXN91qjd3HAKYqO5MaJHBntDLH9T-1iuVmxXI80VjtoBHNrVQ9tdFMhUxLa2eRIepwiQ",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"User\",\r\n    \"description\": \"User role\",\r\n    \"permissions\": [\"SEARCH_BOOK\"]\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/bookstore/roles",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"bookstore",
+						"roles"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get Roles",
+			"request": {
+				"method": "GET",
+				"header": []
+			},
+			"response": []
+		},
+		{
+			"name": "create Category",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJib29rc3RvcmUuY29tIiwic3ViIjoidGVzdGVyMTEiLCJleHAiOjE3NDcyNzc2MzEsImlhdCI6MTc0NzI3NDAzMSwianRpIjoiMmY3YjgyYWItYThlOC00MDViLWI5OGItZmIyZTI3NzU1NmUzIiwic2NvcGUiOiJST0xFX1VTRVIgU0VBUkNIX0JPT0sifQ._ONShGAlgPvy98TVpv1doJtiZToj22MifpXMKPYzTS32yCrDNVZJZ8YosRhbjJKDWLtwVmDBYt1ww2H2qcciKA",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"categoryName\": \"Example Category\"\r\n}\r\n"
+				},
+				"url": {
+					"raw": "http://localhost:8080/bookstore/categories",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"bookstore",
+						"categories"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get Categories",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJib29rc3RvcmUuY29tIiwic3ViIjoiYWRtaW4iLCJleHAiOjE3NDczMDEwNzAsImlhdCI6MTc0NzI5NzQ3MCwianRpIjoiYmFmODkwYzQtMTQ3Ni00ZGZkLThiY2EtOWRjMDc5N2U4ZmFiIiwic2NvcGUiOiJST0xFX0FETUlOIE1PRElGWV9TRVRUSU5HIn0.GIPDPLwRrRkQhbD1yV4EtlTOeWEA9LkYJTXZk7daoxJj6jGSabwLLGkcvN55DDuuhiWjpEu01UV2enbHq7Gz1g",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/bookstore/categories",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"bookstore",
+						"categories"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "create Book",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"// Parse the JSON response body\r",
+							"var jsonData = pm.response.json();\r",
+							"\r",
+							"// Set the access_token in the environment variable if it exists\r",
+							"if (jsonData.access_token) {\r",
+							"    pm.environment.set(\"access_token\", jsonData.access_token);\r",
+							"}\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJib29rc3RvcmUuY29tIiwic3ViIjoiYWRtaW4iLCJleHAiOjE3NDc2NjI4MDMsImlhdCI6MTc0NzY1OTIwMywianRpIjoiODk2YzI0ZTQtNjJiOC00Y2QxLWJjYjAtNGM3NmM4YWJkZGQzIiwic2NvcGUiOiJST0xFX0FETUlOIE1PRElGWV9TRVRUSU5HIn0.F39X31SLvtHobVxfRJPSLHpz4zLDu4sAcyLuOkp163-WOQvIw1BPbJ8-JEOBOn4HNio0pvZRc8EeD7IUUOSmdQ",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\" : \"Nhap Mon Lap Trinh\",\r\n    \"authors\" : [\"Mai Tien Dung\"],\r\n    \"categories\" : [\"Coding\"],\r\n    \"publishedYear\" : 2022,\r\n    \"importPrice\" : 20 ,\r\n    \"quantity\" : 20\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/bookstore/books",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"bookstore",
+						"books"
+					]
+				},
+				"description": "\n### Add Book to Bookstore\n\nThis endpoint allows you to add a new book to the bookstore.\n\n#### Request Body\n- `name` (string): The name of the book.\n- `authors` (array of strings): The authors of the book.\n- `categories` (array of strings): The categories the book belongs to.\n- `publishedYear` (number): The year the book was published.\n- `importPrice` (number): The import price of the book.\n- `quantity` (number): The quantity of the book available.\n\n#### Response\nUpon successful addition, the response will include:\n- `id` (string): The unique identifier of the added book.\n- `name` (string): The name of the added book.\n- `publishedYear` (number): The published year of the added book.\n- `importPrice` (number): The import price of the added book.\n- `quantity` (number): The quantity of the added book.\n- `authors` (array of objects): The authors of the added book, each containing an `authorId` and `authorName`.\n- `categories` (array): The categories of the added book.\n\nIn case of an error, the response will include:\n- `code` (number): The error code.\n- `result` (object): The result of the operation, with specific fields set to default values.\n\n"
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "access_token",
+			"value": "",
+			"type": "string"
+		}
+	]
+}
