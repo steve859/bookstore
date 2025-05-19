@@ -13,7 +13,6 @@ import com.bookstore.entity.Books;
 public interface BookMapper {
     @Mapping(target = "authors", ignore = true)
     @Mapping(target = "categories", ignore = true)
-    @Mapping(target = "bookId", ignore = true)
     Books toBook(BookCreationRequest request);
 
     BookResponse toBookResponse(Books book);

@@ -1,8 +1,7 @@
 package com.bookstore.dto.request;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
-import java.util.Set;
+import java.util.List;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -17,8 +16,6 @@ import lombok.experimental.FieldDefaults;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class ImportReceiptCreationRequest {
-    String adminId;
-    LocalDate importDate;
     BigDecimal totalAmount;
-    Set<Integer> books;
+    List<String> books;
 }

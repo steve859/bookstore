@@ -30,6 +30,7 @@ public class ImportReceiptService {
 
     public ImportReceiptRespones createImportReceipt(ImportReceiptCreationRequest request) {
         ImportReceipts importReceipt = importReceiptMapper.toImportReceipt(request);
+
         return importReceiptMapper.toImportReceiptRespones(importReceiptRepository.save(importReceipt));
     }
 

@@ -16,7 +16,7 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class BookResponse {
-    String id;
+    Integer bookId;
     String name;
     Integer publishedYear;
     BigDecimal importPrice;

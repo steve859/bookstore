@@ -12,11 +12,13 @@ import com.bookstore.dto.request.BookUpdateRequest;
 import com.bookstore.dto.response.BookResponse;
 import com.bookstore.entity.Authors;
 import com.bookstore.entity.Books;
+import com.bookstore.entity.Categories;
 import com.bookstore.exception.AppException;
 import com.bookstore.exception.ErrorCode;
 import com.bookstore.mapper.BookMapper;
 import com.bookstore.repository.AuthorRepository;
 import com.bookstore.repository.BookRepository;
+import com.bookstore.repository.CategoryRepository;
 
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -30,6 +32,7 @@ import lombok.extern.slf4j.Slf4j;
 public class BookService {
     @Autowired
     AuthorRepository authorRepository;
+    CategoryRepository categoryRepository;
     BookRepository bookRepository;
     BookMapper bookMapper;
 
@@ -37,7 +40,10 @@ public class BookService {
         if (request.getQuantity() >= 30) {
             throw new AppException(ErrorCode.BOOK_QUANTITY_EXCEEDED);
         }
+
         Books book = bookMapper.toBook(request);
+
+        // Xử lý authors
         List<String> authorsString = request.getAuthors();
         Set<Authors> authorsSet = new HashSet<>();
         for (String authorString : authorsString) {
@@ -51,9 +57,22 @@ public class BookService {
             authorsSet.add(author);
         }
         book.setAuthors(authorsSet);
+
+        List<String> categoriesString = request.getCategories();
+        Set<Categories> categoriesSet = new HashSet<>();
+        for (String categoryString : categoriesString) {
+            Categories category = categoryRepository.findByCategoryName(categoryString)
+                    .orElseGet(() -> {
+                        Categories newCategory = Categories.builder()
+                                .categoryName(categoryString)
+                                .build();
+                        return categoryRepository.save(newCategory);
+                    });
+            categoriesSet.add(category);
+        }
+        book.setCategories(categoriesSet);
         Books savedBook = bookRepository.save(book);
         return bookMapper.toBookResponse(savedBook);
-
     }
 
     public List<BookResponse> getBooks() {
