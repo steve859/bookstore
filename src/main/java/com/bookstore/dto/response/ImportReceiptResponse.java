@@ -11,7 +11,7 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class ImportReceiptRespones {
+public class ImportReceiptResponse {
     Integer importReceiptId;
     String adminId;
     LocalDate importDate;

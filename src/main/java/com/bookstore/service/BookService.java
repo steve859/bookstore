@@ -1,10 +1,10 @@
 package com.bookstore.service;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 
 import com.bookstore.dto.request.BookCreationRequest;
@@ -25,6 +25,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 
+import static java.util.Collections.sort;
+
 @Service
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
@@ -36,15 +38,7 @@ public class BookService {
     BookRepository bookRepository;
     BookMapper bookMapper;
 
-    public BookResponse createBook(BookCreationRequest request) {
-        if (request.getQuantity() >= 30) {
-            throw new AppException(ErrorCode.BOOK_QUANTITY_EXCEEDED);
-        }
-
-        Books book = bookMapper.toBook(request);
-
-        // Xử lý authors
-        List<String> authorsString = request.getAuthors();
+    private Set<Authors> resolveAuthors(List<String> authorsString) {
         Set<Authors> authorsSet = new HashSet<>();
         for (String authorString : authorsString) {
             Authors author = authorRepository.findByAuthorName(authorString)
@@ -56,9 +50,10 @@ public class BookService {
                     });
             authorsSet.add(author);
         }
-        book.setAuthors(authorsSet);
+        return authorsSet;
+    }
 
-        List<String> categoriesString = request.getCategories();
+    private Set<Categories> resolveCategories(List<String> categoriesString) {
         Set<Categories> categoriesSet = new HashSet<>();
         for (String categoryString : categoriesString) {
             Categories category = categoryRepository.findByCategoryName(categoryString)
@@ -70,7 +65,44 @@ public class BookService {
                     });
             categoriesSet.add(category);
         }
-        book.setCategories(categoriesSet);
+        return categoriesSet;
+    }
+
+    private Optional<Books> IsBookAvailable(String Name, List<String> inputAuthorNames) {
+        List<Books> booksWithSameName = bookRepository.findByName(Name);
+        if (booksWithSameName.isEmpty()) {
+            return Optional.empty();
+        }
+        Collections.sort(inputAuthorNames);
+        for(Books book : booksWithSameName) {
+            List<String> existedAuthorNames = book.getAuthors().stream()
+                    .map(Authors::getAuthorName)
+                    .sorted()
+                    .collect(Collectors.toList());
+            if(inputAuthorNames.equals(existedAuthorNames)) {
+                return Optional.of(book);
+            }
+        }
+        return Optional.empty();
+    };
+
+    public BookResponse createBook(BookCreationRequest request) {
+        Optional<Books> bookAvailable = IsBookAvailable(request.getName(), request.getAuthors());
+        Books book;
+        if(bookAvailable.isPresent()) {
+            book = bookAvailable.get();
+            if(book.getQuantity()>=300){
+                throw new AppException(ErrorCode.BOOK_QUANTITY_EXCEEDED);
+            }
+            book.setQuantity(book.getQuantity() + request.getQuantity());
+        }
+        else {
+            book = bookMapper.toBook(request);
+            // Xử lý authors
+            book.setAuthors(resolveAuthors(request.getAuthors()));
+            // Xử lý categories
+            book.setCategories(resolveCategories(request.getCategories()));
+        }
         Books savedBook = bookRepository.save(book);
         return bookMapper.toBookResponse(savedBook);
     }

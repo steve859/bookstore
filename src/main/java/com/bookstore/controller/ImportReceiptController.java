@@ -2,6 +2,7 @@ package com.bookstore.controller;
 
 import java.util.List;
 
+import com.bookstore.dto.response.ImportReceiptResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -17,7 +18,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.bookstore.dto.request.ApiResponse;
 import com.bookstore.dto.request.ImportReceiptCreationRequest;
 import com.bookstore.dto.request.ImportReceiptUpdateRequest;
-import com.bookstore.dto.response.ImportReceiptRespones;
 import com.bookstore.service.ImportReceiptService;
 
 import lombok.AccessLevel;
@@ -35,29 +35,29 @@ public class ImportReceiptController {
     private ImportReceiptService importReceiptService;
 
     @PostMapping
-    ApiResponse<ImportReceiptRespones> createImportReceipt(@RequestBody ImportReceiptCreationRequest request) {
-        return ApiResponse.<ImportReceiptRespones>builder().result(importReceiptService.createImportReceipt(request))
+    ApiResponse<ImportReceiptResponse> createImportReceipt(@RequestBody ImportReceiptCreationRequest request) {
+        return ApiResponse.<ImportReceiptResponse>builder().result(importReceiptService.createImportReceipt(request))
                 .build();
     }
 
     @GetMapping
-    ApiResponse<List<ImportReceiptRespones>> getImportReceipts() {
+    ApiResponse<List<ImportReceiptResponse>> getImportReceipts() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         authentication.getAuthorities().forEach(grantedAuthority -> log.info(grantedAuthority.getAuthority()));
-        return ApiResponse.<List<ImportReceiptRespones>>builder().result(importReceiptService.getImportReceipts())
+        return ApiResponse.<List<ImportReceiptResponse>>builder().result(importReceiptService.getImportReceipts())
                 .build();
     }
 
     @GetMapping("/{importReceiptId}")
-    ApiResponse<ImportReceiptRespones> getImportReceipt(@PathVariable("importReceiptId") Integer importReceiptId) {
-        return ApiResponse.<ImportReceiptRespones>builder()
+    ApiResponse<ImportReceiptResponse> getImportReceipt(@PathVariable("importReceiptId") Integer importReceiptId) {
+        return ApiResponse.<ImportReceiptResponse>builder()
                 .result(importReceiptService.getImportReceipt(importReceiptId)).build();
     }
 
     @PutMapping("/{importReceiptId}")
-    ApiResponse<ImportReceiptRespones> updateImportReceipt(@PathVariable("importReceiptId") Integer importReceiptId,
+    ApiResponse<ImportReceiptResponse> updateImportReceipt(@PathVariable("importReceiptId") Integer importReceiptId,
             @RequestBody ImportReceiptUpdateRequest request) {
-        return ApiResponse.<ImportReceiptRespones>builder()
+        return ApiResponse.<ImportReceiptResponse>builder()
                 .result(importReceiptService.updateImportReceipt(importReceiptId, request)).build();
     }
 
