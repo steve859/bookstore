@@ -1,11 +1,14 @@
 package com.bookstore.service;
 
+import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 import com.bookstore.dto.request.BookCreationRequest;
 import com.bookstore.dto.response.ImportReceiptResponse;
+import com.bookstore.entity.Books;
 import com.bookstore.entity.BooksImportReceipts;
 import com.bookstore.mapper.BookMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,18 +45,24 @@ public class ImportReceiptService {
         Set<BooksImportReceipts> booksImportReceiptsSet = new HashSet<>();
         List<BookCreationRequest> inputBooks = request.getBookDetails();
         int totalQuantity = inputBooks.stream().mapToInt(BookCreationRequest::getQuantity).sum();
+        BigDecimal totalAmount = BigDecimal.valueOf(0);
         if(totalQuantity<150) {
             throw new IllegalArgumentException("Import quantity must be at least 150 books. Current quantity: " + totalQuantity);
         }
-        for(BookCreationRequest inputBook : inputBooks) {
+        for(BookCreationRequest inputBookRequest : inputBooks) {
             BooksImportReceipts booksImportReceipt = new BooksImportReceipts();
-            booksImportReceipt.setBook(bookMapper.toBook(bookService.createBook(inputBook)));
+            Books inputBook = bookMapper.toBook(bookService.createBook(inputBookRequest));
+            totalAmount = totalAmount.add(inputBook.getImportPrice().multiply(BigDecimal.valueOf(inputBook.getQuantity())));
+            booksImportReceipt.setBook(inputBook);
             booksImportReceipt.setImportReceipt(importReceipt);
-            booksImportReceipt.setQuantity(inputBook.getQuantity());
-            booksImportReceipt.setImportPrice(inputBook.getImportPrice());
+            booksImportReceipt.setQuantity(inputBookRequest.getQuantity());
+            booksImportReceipt.setImportPrice(inputBookRequest.getImportPrice());
             booksImportReceiptsSet.add(booksImportReceipt);
         }
         importReceipt.setBookDetails(booksImportReceiptsSet);
+        importReceipt.setImportDate(LocalDate.now());
+        importReceipt.setTotalAmount(totalAmount);
+
         return importReceiptMapper.toImportReceiptResponse(importReceiptRepository.save(importReceipt));
     }
 
