@@ -47,7 +47,7 @@ public class ImportReceiptService {
         int totalQuantity = inputBooks.stream().mapToInt(BookCreationRequest::getQuantity).sum();
         BigDecimal totalAmount = BigDecimal.valueOf(0);
         if(totalQuantity<150) {
-            throw new IllegalArgumentException("Import quantity must be at least 150 books. Current quantity: " + totalQuantity);
+            throw new AppException(ErrorCode.INSUFFICIENT_IMPORT_QUANTITY);
         }
         for(BookCreationRequest inputBookRequest : inputBooks) {
             BooksImportReceipts booksImportReceipt = new BooksImportReceipts();

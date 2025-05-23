@@ -73,13 +73,17 @@ public class BookService {
         if (booksWithSameName.isEmpty()) {
             return Optional.empty();
         }
-        Collections.sort(inputAuthorNames);
+        List<String> sortedInputAuthors = inputAuthorNames.stream()
+                .map(s -> s.trim().toLowerCase())
+                .sorted(Comparator.naturalOrder())
+                .collect(Collectors.toList());
         for(Books book : booksWithSameName) {
-            List<String> existedAuthorNames = book.getAuthors().stream()
+            List<String> sortedExistedAuthors = book.getAuthors().stream()
                     .map(Authors::getAuthorName)
-                    .sorted()
+                    .map(s -> s.trim().toLowerCase())
+                    .sorted(Comparator.naturalOrder())
                     .collect(Collectors.toList());
-            if(inputAuthorNames.equals(existedAuthorNames)) {
+            if(sortedInputAuthors.equals(sortedExistedAuthors)) {
                 return Optional.of(book);
             }
         }
