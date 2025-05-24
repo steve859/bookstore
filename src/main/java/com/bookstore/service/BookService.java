@@ -1,5 +1,6 @@
 package com.bookstore.service;
 
+import java.text.Normalizer;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -24,6 +25,7 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.transaction.annotation.Transactional;
 
 import static java.util.Collections.sort;
 
@@ -68,29 +70,38 @@ public class BookService {
         return categoriesSet;
     }
 
-    private Optional<Books> IsBookAvailable(String Name, List<String> inputAuthorNames) {
+    private String normalize(String s) {
+        return Normalizer.normalize(s, Normalizer.Form.NFD)
+                .replaceAll("\\p{M}", "")
+                .replaceAll("\\s+", " ")
+                .trim()
+                .toLowerCase();
+    }
+
+    private Optional<Books> IsBookAvailable(String Name, List<String> inputAuthorNames ) {
         List<Books> booksWithSameName = bookRepository.findByName(Name);
         if (booksWithSameName.isEmpty()) {
             return Optional.empty();
         }
-        List<String> sortedInputAuthors = inputAuthorNames.stream()
-                .map(s -> s.trim().toLowerCase())
-                .sorted(Comparator.naturalOrder())
-                .collect(Collectors.toList());
-        for(Books book : booksWithSameName) {
-            List<String> sortedExistedAuthors = book.getAuthors().stream()
+        Set<String> inputAuthors = inputAuthorNames.stream()
+                .map(this::normalize)
+                .collect(Collectors.toSet());
+
+        for (Books book : booksWithSameName) {
+            Set<String> dbAuthors = book.getAuthors().stream()
                     .map(Authors::getAuthorName)
-                    .map(s -> s.trim().toLowerCase())
-                    .sorted(Comparator.naturalOrder())
-                    .collect(Collectors.toList());
-            if(sortedInputAuthors.equals(sortedExistedAuthors)) {
+                    .map(this::normalize)
+                    .collect(Collectors.toSet());
+
+            if (inputAuthors.equals(dbAuthors)) {
                 return Optional.of(book);
             }
         }
         return Optional.empty();
     };
 
-    public BookResponse createBook(BookCreationRequest request) {
+    @Transactional
+    public Books createBook(BookCreationRequest request) {
         Optional<Books> bookAvailable = IsBookAvailable(request.getName(), request.getAuthors());
         Books book;
         if(bookAvailable.isPresent()) {
@@ -107,8 +118,8 @@ public class BookService {
             // Xử lý categories
             book.setCategories(resolveCategories(request.getCategories()));
         }
-        Books savedBook = bookRepository.save(book);
-        return bookMapper.toBookResponse(savedBook);
+        return bookRepository.save(book);
+
     }
 
     public List<BookResponse> getBooks() {

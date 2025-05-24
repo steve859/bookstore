@@ -18,5 +18,4 @@ public interface BookMapper {
     BookResponse toBookResponse(Books book);
 
     void updateBook(@MappingTarget Books book, BookUpdateRequest request);
-    Books toBook(BookResponse response);
 }

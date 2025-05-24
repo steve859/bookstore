@@ -10,6 +10,7 @@ import com.bookstore.dto.request.BookCreationRequest;
 import com.bookstore.dto.response.ImportReceiptResponse;
 import com.bookstore.entity.Books;
 import com.bookstore.entity.BooksImportReceipts;
+import com.bookstore.entity.BooksImportReceiptsID;
 import com.bookstore.mapper.BookMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -41,7 +42,7 @@ public class ImportReceiptService {
     private BookMapper bookMapper;
 
     public ImportReceiptResponse createImportReceipt(ImportReceiptCreationRequest request) {
-        ImportReceipts importReceipt = importReceiptMapper.toImportReceipt(request);
+        ImportReceipts importReceipt = importReceiptRepository.save(importReceiptMapper.toImportReceipt(request));
         Set<BooksImportReceipts> booksImportReceiptsSet = new HashSet<>();
         List<BookCreationRequest> inputBooks = request.getBookDetails();
         int totalQuantity = inputBooks.stream().mapToInt(BookCreationRequest::getQuantity).sum();
@@ -51,7 +52,12 @@ public class ImportReceiptService {
         }
         for(BookCreationRequest inputBookRequest : inputBooks) {
             BooksImportReceipts booksImportReceipt = new BooksImportReceipts();
-            Books inputBook = bookMapper.toBook(bookService.createBook(inputBookRequest));
+            Books inputBook = bookService.createBook(inputBookRequest);
+            BooksImportReceiptsID id = new BooksImportReceiptsID(
+                    inputBook.getBookId(),
+                    importReceipt.getImportReceiptId()
+            );
+            booksImportReceipt.setId(id);
             totalAmount = totalAmount.add(inputBook.getImportPrice().multiply(BigDecimal.valueOf(inputBook.getQuantity())));
             booksImportReceipt.setBook(inputBook);
             booksImportReceipt.setImportReceipt(importReceipt);

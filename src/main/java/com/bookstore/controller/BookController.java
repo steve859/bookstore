@@ -2,6 +2,7 @@ package com.bookstore.controller;
 
 import java.util.List;
 
+import com.bookstore.entity.Books;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -35,8 +36,8 @@ public class BookController {
     private BookService bookService;
 
     @PostMapping
-    ApiResponse<BookResponse> createBook(@RequestBody BookCreationRequest request) {
-        return ApiResponse.<BookResponse>builder().result(bookService.createBook(request)).build();
+    ApiResponse<Books> createBook(@RequestBody BookCreationRequest request) {
+        return ApiResponse.<Books>builder().result(bookService.createBook(request)).build();
     }
 
     @GetMapping
