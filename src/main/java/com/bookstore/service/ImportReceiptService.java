@@ -27,6 +27,7 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -41,35 +42,43 @@ public class ImportReceiptService {
     @Autowired
     private BookMapper bookMapper;
 
+    @Transactional
     public ImportReceiptResponse createImportReceipt(ImportReceiptCreationRequest request) {
-        ImportReceipts importReceipt = importReceiptRepository.save(importReceiptMapper.toImportReceipt(request));
-        Set<BooksImportReceipts> booksImportReceiptsSet = new HashSet<>();
         List<BookCreationRequest> inputBooks = request.getBookDetails();
         int totalQuantity = inputBooks.stream().mapToInt(BookCreationRequest::getQuantity).sum();
-        BigDecimal totalAmount = BigDecimal.valueOf(0);
-        if(totalQuantity<150) {
+
+        if (totalQuantity < 150) {
             throw new AppException(ErrorCode.INSUFFICIENT_IMPORT_QUANTITY);
         }
-        for(BookCreationRequest inputBookRequest : inputBooks) {
-            BooksImportReceipts booksImportReceipt = new BooksImportReceipts();
+
+        ImportReceipts importReceipt = importReceiptMapper.toImportReceipt(request);
+        importReceipt.setImportDate(LocalDate.now());
+
+        Set<BooksImportReceipts> booksImportReceiptsSet = new HashSet<>();
+        BigDecimal totalAmount = BigDecimal.ZERO;
+
+        for (BookCreationRequest inputBookRequest : inputBooks) {
             Books inputBook = bookService.createBook(inputBookRequest);
-            BooksImportReceiptsID id = new BooksImportReceiptsID(
-                    inputBook.getBookId(),
-                    importReceipt.getImportReceiptId()
-            );
-            booksImportReceipt.setId(id);
-            totalAmount = totalAmount.add(inputBook.getImportPrice().multiply(BigDecimal.valueOf(inputBook.getQuantity())));
+
+            BooksImportReceipts booksImportReceipt = new BooksImportReceipts();
             booksImportReceipt.setBook(inputBook);
-            booksImportReceipt.setImportReceipt(importReceipt);
+            booksImportReceipt.setImportReceipt(importReceipt); // Set reference
             booksImportReceipt.setQuantity(inputBookRequest.getQuantity());
             booksImportReceipt.setImportPrice(inputBookRequest.getImportPrice());
+
+            BigDecimal lineAmount = inputBookRequest.getImportPrice()
+                    .multiply(BigDecimal.valueOf(inputBookRequest.getQuantity()));
+            totalAmount = totalAmount.add(lineAmount);
+
             booksImportReceiptsSet.add(booksImportReceipt);
         }
-        importReceipt.setBookDetails(booksImportReceiptsSet);
-        importReceipt.setImportDate(LocalDate.now());
-        importReceipt.setTotalAmount(totalAmount);
 
-        return importReceiptMapper.toImportReceiptResponse(importReceiptRepository.save(importReceipt));
+        importReceipt.setTotalAmount(totalAmount);
+        importReceipt.setBookDetails(booksImportReceiptsSet);
+
+        ImportReceipts savedImportReceipt = importReceiptRepository.save(importReceipt);
+
+        return importReceiptMapper.toImportReceiptResponse(savedImportReceipt);
     }
 
     public List<ImportReceiptResponse> getImportReceipts() {

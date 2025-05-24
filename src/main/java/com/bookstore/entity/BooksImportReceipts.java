@@ -2,40 +2,34 @@ package com.bookstore.entity;
 
 import java.math.BigDecimal;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.EmbeddedId;
-import jakarta.persistence.Entity;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.MapsId;
-import jakarta.persistence.Table;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import jakarta.persistence.*;
+import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 @Entity
-@Table(name = "books_import_receipts")
+@Table(name = "books_import_receipts",uniqueConstraints = @UniqueConstraint(columnNames = {"book_id", "import_receipt_id"}))
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
+
 public class BooksImportReceipts {
 
-    @EmbeddedId
-    BooksImportReceiptsID id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    Integer id;
 
     @ManyToOne
-    @MapsId("bookId")
     @JoinColumn(name = "book_id")
     Books book;
 
     @ManyToOne
-    @MapsId("importReceiptId")
     @JoinColumn(name = "import_receipt_id")
+    @JsonBackReference
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
     ImportReceipts importReceipt;
 
     @Column(name = "quantity")

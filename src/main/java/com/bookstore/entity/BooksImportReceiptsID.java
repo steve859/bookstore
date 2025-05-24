@@ -16,6 +16,7 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class BooksImportReceiptsID implements Serializable {
+
     @Column(name = "book_id")
     Integer bookId;
     @Column(name = "import_receipt_id")
