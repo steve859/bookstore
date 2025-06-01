@@ -15,7 +15,13 @@ public interface BookMapper {
     @Mapping(target = "categories", ignore = true)
     Books toBook(BookCreationRequest request);
 
+    // @Mapping(target = "authors", ignore = true)
+    // @Mapping(target = "categories", ignore = true)
+    // Books toBook(BookUpdateRequest request);
+
     BookResponse toBookResponse(Books book);
 
+    @Mapping(target = "authors", ignore = true)
+    @Mapping(target = "categories", ignore = true)
     void updateBook(@MappingTarget Books book, BookUpdateRequest request);
 }

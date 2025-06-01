@@ -1,10 +1,7 @@
 package com.bookstore.dto.request;
 
-import java.math.BigDecimal;
-import java.time.LocalDate;
 import java.util.List;
 
-import com.bookstore.entity.BooksImportReceipts;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

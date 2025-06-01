@@ -22,4 +22,8 @@ public class BookCreationRequest {
     int quantity;
     List<String> authors;
     List<String> categories;
+
+    public List<String> getAuthors() {
+        return this.authors;
+    }
 }

@@ -24,7 +24,8 @@ public enum ErrorCode {
     INVOICE_NOT_EXISTED(1014, "Invoice not existed", HttpStatus.NOT_FOUND),
     PAYMENT_RECEIPT_NOT_EXISTED(1015, "Payment receipt not existed", HttpStatus.NOT_FOUND),
     CATEGORY_EXISTED(1016, "Category existed", HttpStatus.BAD_REQUEST),
-    INSUFFICIENT_IMPORT_QUANTITY(1017, "Import quantity must be at least 150 books", HttpStatus.BAD_REQUEST);
+    INSUFFICIENT_IMPORT_QUANTITY(1017, "Import quantity must be at least 150 books", HttpStatus.BAD_REQUEST),
+    BOOK_EXISTED(1018, "Book title existed", HttpStatus.BAD_REQUEST);
 
     ErrorCode(int code, String message, HttpStatusCode statusCode) {
         this.code = code;
