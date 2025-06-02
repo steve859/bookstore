@@ -1,12 +1,16 @@
 package com.bookstore.service;
 
+import java.math.BigDecimal;
 import java.text.Normalizer;
-import java.util.*;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.bookstore.dto.request.BookCreationRequest;
 import com.bookstore.dto.request.BookUpdateRequest;
@@ -25,9 +29,6 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.transaction.annotation.Transactional;
-
-import static java.util.Collections.sort;
 
 @Service
 @RequiredArgsConstructor
@@ -78,7 +79,7 @@ public class BookService {
                 .toLowerCase();
     }
 
-    private Optional<Books> IsBookAvailable(String Name, List<String> inputAuthorNames ) {
+    private Optional<Books> IsBookAvailable(String Name, List<String> inputAuthorNames) {
         List<Books> booksWithSameName = bookRepository.findByName(Name);
         if (booksWithSameName.isEmpty()) {
             return Optional.empty();
@@ -102,21 +103,16 @@ public class BookService {
 
     @Transactional
     public Books createBook(BookCreationRequest request) {
-        Optional<Books> bookAvailable = IsBookAvailable(request.getName(), request.getAuthors());
         Books book;
-        if(bookAvailable.isPresent()) {
-            book = bookAvailable.get();
-            if(book.getQuantity()>=300){
-                throw new AppException(ErrorCode.BOOK_QUANTITY_EXCEEDED);
-            }
-            book.setQuantity(book.getQuantity() + request.getQuantity());
-        }
-        else {
+        Optional<Books> bookAvailable = IsBookAvailable(request.getName(), request.getAuthors());
+        if (bookAvailable.isEmpty()) {
+            request.setImportPrice(new BigDecimal(0));
+            request.setQuantity(0);
             book = bookMapper.toBook(request);
-            // Xử lý authors
             book.setAuthors(resolveAuthors(request.getAuthors()));
-            // Xử lý categories
             book.setCategories(resolveCategories(request.getCategories()));
+        } else {
+            throw new AppException(ErrorCode.BOOK_EXISTED);
         }
         return bookRepository.save(book);
     }
@@ -137,8 +133,20 @@ public class BookService {
     }
 
     public BookResponse updateBook(Integer bookId, BookUpdateRequest request) {
-        Books book = bookRepository.findById(bookId).orElseThrow(() -> new AppException(ErrorCode.BOOK_NOT_EXISTED));
-        bookMapper.updateBook(book, request);
-        return bookMapper.toBookResponse(bookRepository.save(book));
+        Optional<Books> bookAvaiable = IsBookAvailable(request.getName(), request.getAuthors());
+        Books book;
+        if (!bookAvaiable.isEmpty()) {
+            book = bookAvaiable.get();
+            if (book.getQuantity() >= 300) {
+                throw new AppException(ErrorCode.BOOK_QUANTITY_EXCEEDED);
+            }
+            request.setQuantity(book.getQuantity() + request.getQuantity());
+            book.setAuthors(resolveAuthors(request.getAuthors()));
+            book.setCategories(resolveCategories(request.getCategories()));
+            bookMapper.updateBook(book, request);
+            return bookMapper.toBookResponse(bookRepository.save(book));
+        } else {
+            throw new AppException(ErrorCode.BOOK_NOT_EXISTED);
+        }
     }
 }

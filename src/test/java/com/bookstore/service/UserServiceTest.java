@@ -1,7 +1,11 @@
 package com.bookstore.service;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.when;
+
 import java.time.LocalDate;
-import java.util.List;
 
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -12,19 +16,10 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.TestPropertySource;
 
 import com.bookstore.dto.request.UserCreationRequest;
-import com.bookstore.dto.request.UserUpdateRequest;
 import com.bookstore.dto.response.UserResponse;
-import com.bookstore.entity.Roles;
 import com.bookstore.entity.Users;
 import com.bookstore.exception.AppException;
-import com.bookstore.exception.ErrorCode;
-import com.bookstore.repository.RoleRepository;
 import com.bookstore.repository.UserRepository;
-
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.when;
 
 @SpringBootTest
 

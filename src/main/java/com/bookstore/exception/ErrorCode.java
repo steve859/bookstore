@@ -27,8 +27,8 @@ public enum ErrorCode {
     INSUFFICIENT_IMPORT_QUANTITY(1017, "Import quantity must be at least 150 books", HttpStatus.BAD_REQUEST),
     DEBT_AMOUNT_LIMIT_EXCEEDED(1018, "Debt amount limit exceeded", HttpStatus.BAD_REQUEST),
     BOOK_QUANTITY_UNDER_LIMIT(1019, "Book quantity under limit exceeded", HttpStatus.BAD_REQUEST),
-    MONTHLY_DEBT_REPORT_NOT_EXISTED(1020,"Monthly debt report not existed",HttpStatus.NOT_FOUND);
-
+    MONTHLY_DEBT_REPORT_NOT_EXISTED(1020,"Monthly debt report not existed",HttpStatus.NOT_FOUND),
+    BOOK_EXISTED(1021, "Book title existed", HttpStatus.BAD_REQUEST);
     ErrorCode(int code, String message, HttpStatusCode statusCode) {
         this.code = code;
         this.message = message;

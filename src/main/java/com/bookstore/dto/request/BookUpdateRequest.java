@@ -1,11 +1,12 @@
 package com.bookstore.dto.request;
 
+import java.math.BigDecimal;
+import java.util.List;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.math.BigDecimal;
 
 @Data
 @Builder
@@ -13,7 +14,9 @@ import java.math.BigDecimal;
 @AllArgsConstructor
 public class BookUpdateRequest {
     String name;
-    String author;
+    List<String> authors;
+    List<String> categories;
     String published_year;
-    BigDecimal selling_price;
+    BigDecimal importPrice;
+    Integer quantity;
 }

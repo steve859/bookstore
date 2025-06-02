@@ -1,22 +1,28 @@
 package com.bookstore.controller;
 
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
 import com.bookstore.dto.request.ApiResponse;
 import com.bookstore.dto.request.PaymentReceiptCreationRequest;
 import com.bookstore.dto.request.PaymentReceiptUpdateRequest;
-import com.bookstore.dto.response.InvoiceResponse;
 import com.bookstore.dto.response.PaymentReceiptResponse;
-import com.bookstore.repository.PaymentReceiptRepository;
 import com.bookstore.service.PaymentReceiptService;
+
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/paymentReceipts")
@@ -28,25 +34,30 @@ public class PaymentReceiptController {
     private PaymentReceiptService paymentReceiptService;
 
     @PostMapping
-    ApiResponse<PaymentReceiptResponse> createPaymentReceipt(@RequestBody PaymentReceiptCreationRequest request) {
-        return ApiResponse.<PaymentReceiptResponse>builder().result(paymentReceiptService.createPaymentReceipt(request)).build();
+    ApiResponse<PaymentReceiptResponse> createPaymentReceipt(PaymentReceiptCreationRequest request) {
+        return ApiResponse.<PaymentReceiptResponse>builder().result(paymentReceiptService.createPaymentReceipt(request))
+                .build();
     }
 
     @GetMapping
     ApiResponse<List<PaymentReceiptResponse>> getPaymentReceipts() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         authentication.getAuthorities().forEach(grantedAuthority -> log.info(grantedAuthority.getAuthority()));
-        return ApiResponse.<List<PaymentReceiptResponse>>builder().result(paymentReceiptService.getPaymentReceipts()).build();
+        return ApiResponse.<List<PaymentReceiptResponse>>builder().result(paymentReceiptService.getPaymentReceipts())
+                .build();
     }
 
     @GetMapping("/{paymentReceiptId}")
     ApiResponse<PaymentReceiptResponse> getPaymentReceipt(@PathVariable("paymentReceiptId") Integer paymentReceiptId) {
-        return ApiResponse.<PaymentReceiptResponse>builder().result(paymentReceiptService.getPaymentReceipt(paymentReceiptId)).build();
+        return ApiResponse.<PaymentReceiptResponse>builder()
+                .result(paymentReceiptService.getPaymentReceipt(paymentReceiptId)).build();
     }
 
     @PutMapping("/{paymentReceiptId}")
-    ApiResponse<PaymentReceiptResponse> updatePaymentReceipt(@PathVariable("paymentReceiptId") Integer paymentReceiptId, PaymentReceiptUpdateRequest request) {
-        return ApiResponse.<PaymentReceiptResponse>builder().result(paymentReceiptService.updatePaymentReceipt(paymentReceiptId, request)).build();
+    ApiResponse<PaymentReceiptResponse> updatePaymentReceipt(@PathVariable("paymentReceiptId") Integer paymentReceiptId,
+            PaymentReceiptUpdateRequest request) {
+        return ApiResponse.<PaymentReceiptResponse>builder()
+                .result(paymentReceiptService.updatePaymentReceipt(paymentReceiptId, request)).build();
     }
 
     @DeleteMapping("/{paymentReceiptId}")
