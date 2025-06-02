@@ -9,5 +9,5 @@ import java.util.Optional;
 
 @Repository
 public interface MonthlyDebtReportRepository extends JpaRepository<MonthlyDebtReports, Integer> {
-    Optional<MonthlyDebtReports> findByUserIdAndMonth(String userId, LocalDate date);
+    Optional<MonthlyDebtReports> findByUserIdAndReportMonth(String userId, LocalDate date);
 }

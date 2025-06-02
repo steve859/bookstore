@@ -26,9 +26,9 @@ public class MonthlyDebtReportDetails {
 
     @ManyToOne
     @JoinColumn(name = "debt_report_id")
-    MonthlyDebtReports deptReportId;
+    MonthlyDebtReports debtReport;
 
-    @JoinColumn(name = "user_id")
+    @Column(name = "user_id")
     String userId;
 
     @Column(name = "report_month")

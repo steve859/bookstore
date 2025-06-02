@@ -44,7 +44,7 @@ public class MonthlyDebtReportService {
     }
 
     public MonthlyDebtReportResponse updateMonthlyDebtReport(MonthlyDebtReportDetails monthlyDebtReportDetail, BigDecimal amount, String type) {
-        MonthlyDebtReports monthlyDebtReport = monthlyDebtReportRepository.findByUserIdAndMonth(monthlyDebtReportDetail.getUserId(),monthlyDebtReportDetail.getReportDate().withDayOfMonth(1))
+        MonthlyDebtReports monthlyDebtReport = monthlyDebtReportRepository.findByUserIdAndReportMonth(monthlyDebtReportDetail.getUserId(),monthlyDebtReportDetail.getReportDate().withDayOfMonth(1))
                 .orElseThrow(() -> new AppException(ErrorCode.MONTHLY_DEBT_REPORT_NOT_EXISTED));
         if(type.equals("Debit")){
             monthlyDebtReport.setDebtIncrease(monthlyDebtReport.getDebtIncrease().add(amount));

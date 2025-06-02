@@ -47,14 +47,14 @@ public class UserServiceTest {
                 .dob(dob)
                 .build();
         userResponse = UserResponse.builder()
-                .id("cf0600f538b3")
+                .id("1234")
                 .username("john")
                 .firstName("John")
                 .lastName("Doe")
                 .dob(dob)
                 .build();
         user = Users.builder()
-                .id("cf0600f538b3")
+                .id(1234)
                 .username("john")
                 .firstName("John")
                 .lastName("Doe")

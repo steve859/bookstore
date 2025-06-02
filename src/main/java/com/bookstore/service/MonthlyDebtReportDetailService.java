@@ -35,10 +35,11 @@ public class MonthlyDebtReportDetailService {
                 .type(type)
                 .reportDate(LocalDate.now())
                 .build();
-        MonthlyDebtReports monthlyDebtReport = monthlyDebtReportRepository.findByUserIdAndMonth(userId,monthlyDebtReportDetail.getReportDate().withDayOfMonth(1)).orElse(null);
+        MonthlyDebtReports monthlyDebtReport = monthlyDebtReportRepository.findByUserIdAndReportMonth(userId,monthlyDebtReportDetail.getReportDate().withDayOfMonth(1)).orElse(null);
         if(monthlyDebtReport == null) {
             monthlyDebtReportService.createMonthlyDebtReport(userId,monthlyDebtReportDetail.getReportDate().withDayOfMonth(1));
         }
+        monthlyDebtReportDetail.setDebtReport(monthlyDebtReport);
         monthlyDebtReportDetailRepository.save(monthlyDebtReportDetail);
         monthlyDebtReportService.updateMonthlyDebtReport(monthlyDebtReportDetail,amount,type);
         return monthlyDebtReportDetailMapper.toMonthlyDebtReportDetailResponse(monthlyDebtReportDetail);

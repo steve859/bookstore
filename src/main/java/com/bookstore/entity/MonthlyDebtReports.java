@@ -43,6 +43,6 @@ public class MonthlyDebtReports {
     @Column(name = "report_month")
     LocalDate reportMonth;
 
-    @OneToMany(mappedBy = "deptReport", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "debtReport", cascade = CascadeType.ALL)
     List<MonthlyDebtReportDetails> details;
 }
