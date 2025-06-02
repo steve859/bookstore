@@ -2,6 +2,7 @@ package com.bookstore.service;
 
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 
 import org.hibernate.Hibernate;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -101,4 +102,6 @@ public class UserService {
         Hibernate.initialize(user.getRoles());
         return userMapper.toUserResponse(user);
     }
+
+//    public Users getUserEntity(){}
 }

@@ -1,15 +1,11 @@
 package com.bookstore.entity;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.ManyToMany;
+import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -23,12 +19,12 @@ import lombok.experimental.FieldDefaults;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-// @Table(name = "users")
+@Table(name = "users")
 public class Users {
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "user_id")
-    String id;
+    Integer id;
 
     @Column(name = "username")
     String username;
@@ -57,6 +53,9 @@ public class Users {
     // `roles`
     // )
     // @JsonManagedReference
+    @Column(precision = 10, scale = 2, name = "debt_amount_user")
+    BigDecimal debtAmount;
+
     @ManyToMany
     Set<Roles> roles = new HashSet<>();
 

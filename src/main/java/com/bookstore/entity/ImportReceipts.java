@@ -43,5 +43,4 @@ public class ImportReceipts {
     @OneToMany(mappedBy = "importReceipt", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference
     Set<BooksImportReceipts> bookDetails = new HashSet<>();
-
 }

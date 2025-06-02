@@ -1,7 +1,11 @@
 package com.bookstore.service;
 
+import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
+import com.bookstore.entity.Users;
+import com.bookstore.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -27,9 +31,20 @@ public class PaymentReceiptService {
     @Autowired
     PaymentReceiptRepository paymentReceiptRepository;
     PaymentReceiptMapper paymentReceiptMapper;
+    @Autowired
+    private UserRepository userRepository;
+    @Autowired
+    private MonthlyDebtReportDetailService monthlyDebtReportDetailService;
 
     public PaymentReceiptResponse createPaymentReceipt(PaymentReceiptCreationRequest request) {
         PaymentReceipts paymentReceipt = paymentReceiptMapper.toPaymentReceipts(request);
+        paymentReceipt.setCreateAt(LocalDate.now());
+        Users user = userRepository.findById(paymentReceipt.getPayerId())
+                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
+        monthlyDebtReportDetailService.createMonthlyDebtReportDetail(String.valueOf(user.getId()),paymentReceipt.getTotalAmount(),"Credit");
+        user.setDebtAmount(user.getDebtAmount().subtract(paymentReceipt.getTotalAmount()));
+        userRepository.save(user);
+
         return paymentReceiptMapper.toPaymentReceiptResponse(paymentReceiptRepository.save(paymentReceipt));
     }
 

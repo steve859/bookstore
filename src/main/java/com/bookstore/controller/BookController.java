@@ -48,8 +48,8 @@ public class BookController {
     }
 
     @GetMapping("/{bookId}")
-    ApiResponse<BookResponse> getBook(@PathVariable("bookId") Integer bookId) {
-        return ApiResponse.<BookResponse>builder().result(bookService.getBook(bookId)).build();
+    ApiResponse<Books> getBook(@PathVariable("bookId") Integer bookId) {
+        return ApiResponse.<Books>builder().result(bookService.getBook(bookId)).build();
     }
 
     @PutMapping("/{bookId}")

@@ -28,7 +28,7 @@ public class PaymentReceiptController {
     private PaymentReceiptService paymentReceiptService;
 
     @PostMapping
-    ApiResponse<PaymentReceiptResponse> createPaymentReceipt(PaymentReceiptCreationRequest request) {
+    ApiResponse<PaymentReceiptResponse> createPaymentReceipt(@RequestBody PaymentReceiptCreationRequest request) {
         return ApiResponse.<PaymentReceiptResponse>builder().result(paymentReceiptService.createPaymentReceipt(request)).build();
     }
 

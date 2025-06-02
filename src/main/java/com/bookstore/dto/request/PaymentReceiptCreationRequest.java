@@ -16,6 +16,7 @@ import lombok.experimental.FieldDefaults;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class PaymentReceiptCreationRequest {
+    String payerId;
+    String adminId;
     BigDecimal totalAmount;
-    LocalDate createAt;
 }

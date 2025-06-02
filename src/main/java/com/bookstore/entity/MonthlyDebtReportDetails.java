@@ -1,13 +1,9 @@
 package com.bookstore.entity;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -28,9 +24,19 @@ public class MonthlyDebtReportDetails {
     @Column(name = "debt_report_detail_id")
     Integer deptReportDetailId;
 
-    @Column(name = "debt_report_id")
-    Integer deptReportId;
+    @ManyToOne
+    @JoinColumn(name = "debt_report_id")
+    MonthlyDebtReports deptReportId;
+
+    @JoinColumn(name = "user_id")
+    String userId;
 
     @Column(name = "report_month")
-    LocalDate reportMonth;
+    LocalDate reportDate;
+
+    @Column(name = "amount", precision = 15, scale = 2)
+    BigDecimal amount;
+
+    @Column(name = "type")
+    String type;
 }

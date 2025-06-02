@@ -1,7 +1,7 @@
 package com.bookstore.dto.request;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
+import java.util.List;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -16,8 +16,13 @@ import lombok.experimental.FieldDefaults;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class InvoiceCreationRequest {
-    LocalDate createAt;
-    BigDecimal totalAmount;
+    String username;
+    String phone;
+    String adminId;
     BigDecimal paidAmount;
-    BigDecimal debtAmount;
+    List<BookDeleteRequest> bookDetails;
+
+    public String getUserName() {
+        return username;
+    }
 }

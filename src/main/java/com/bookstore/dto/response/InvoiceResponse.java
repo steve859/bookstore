@@ -1,11 +1,13 @@
 package com.bookstore.dto.response;
 
+import com.bookstore.entity.BooksInvoices;
 import jakarta.persistence.Column;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.Set;
 
 @Data
 @Builder
@@ -20,4 +22,5 @@ public class InvoiceResponse {
     BigDecimal totalAmount;
     BigDecimal paidAmount;
     BigDecimal debtAmount;
+    Set<BooksInvoices> bookDetails;
 }

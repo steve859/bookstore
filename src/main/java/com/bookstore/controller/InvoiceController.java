@@ -36,6 +36,8 @@ public class InvoiceController {
 
     @PostMapping
     ApiResponse<InvoiceResponse> createInvoice(@RequestBody InvoiceCreationRequest request) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        authentication.getAuthorities().forEach(grantedAuthority -> log.info(grantedAuthority.getAuthority()));
         return ApiResponse.<InvoiceResponse>builder().result(invoiceService.createInvoice(request)).build();
     }
 

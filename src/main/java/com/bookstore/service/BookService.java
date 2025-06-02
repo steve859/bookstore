@@ -119,16 +119,14 @@ public class BookService {
             book.setCategories(resolveCategories(request.getCategories()));
         }
         return bookRepository.save(book);
-
     }
 
     public List<BookResponse> getBooks() {
         return bookRepository.findAll().stream().map(bookMapper::toBookResponse).toList();
     }
 
-    public BookResponse getBook(Integer bookId) {
-        return bookMapper.toBookResponse(
-                bookRepository.findById(bookId).orElseThrow(() -> new RuntimeException("Book not found")));
+    public Books getBook(Integer bookId) {
+        return bookRepository.findById(bookId).orElseThrow(() -> new RuntimeException("Book not found"));
     }
 
     public void deleteBook(Integer bookId) {
