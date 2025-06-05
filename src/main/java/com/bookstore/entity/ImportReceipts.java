@@ -18,13 +18,16 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 @Entity
-@Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Table(name = "import_receipts")
 @ToString(exclude = {"bookDetails"})
+@EqualsAndHashCode(exclude = {"bookDetails"})
+@Getter
+@Setter
+
 public class ImportReceipts {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

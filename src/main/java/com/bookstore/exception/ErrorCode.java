@@ -28,7 +28,8 @@ public enum ErrorCode {
     DEBT_AMOUNT_LIMIT_EXCEEDED(1018, "Debt amount limit exceeded", HttpStatus.BAD_REQUEST),
     BOOK_QUANTITY_UNDER_LIMIT(1019, "Book quantity under limit exceeded", HttpStatus.BAD_REQUEST),
     MONTHLY_DEBT_REPORT_NOT_EXISTED(1020,"Monthly debt report not existed",HttpStatus.NOT_FOUND),
-    BOOK_EXISTED(1021, "Book title existed", HttpStatus.BAD_REQUEST);
+    BOOK_EXISTED(1021, "Book title existed", HttpStatus.BAD_REQUEST),
+    MONTHLY_INVENTORY_REPORT_NOT_EXISTED(1022,"Monthly inventory report not existed",HttpStatus.NOT_FOUND);
     ErrorCode(int code, String message, HttpStatusCode statusCode) {
         this.code = code;
         this.message = message;

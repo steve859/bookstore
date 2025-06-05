@@ -24,5 +24,5 @@ public class MonthlyDebtReportResponse {
     BigDecimal debtPayment;
     BigDecimal closingDebt;
     LocalDate reportMonth;
-    List<MonthlyDebtReportDetails> details;
+//    List<MonthlyDebtReportDetails> details;
 }

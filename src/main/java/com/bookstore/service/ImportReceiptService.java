@@ -6,6 +6,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import com.bookstore.dto.request.BookUpdateRequest;
+import com.bookstore.repository.BookRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -40,11 +42,13 @@ public class ImportReceiptService {
     private BookService bookService;
     @Autowired
     private BookMapper bookMapper;
+    @Autowired
+    private BookRepository bookRepository;
 
     @Transactional
     public ImportReceiptResponse createImportReceipt(ImportReceiptCreationRequest request) {
-        List<BookCreationRequest> inputBooks = request.getBookDetails();
-        int totalQuantity = inputBooks.stream().mapToInt(BookCreationRequest::getQuantity).sum();
+        List<BookUpdateRequest> inputBooks = request.getBookDetails();
+        int totalQuantity = inputBooks.stream().mapToInt(BookUpdateRequest::getQuantity).sum();
 
         if (totalQuantity < 150) {
             throw new AppException(ErrorCode.INSUFFICIENT_IMPORT_QUANTITY);
@@ -56,12 +60,12 @@ public class ImportReceiptService {
         Set<BooksImportReceipts> booksImportReceiptsSet = new HashSet<>();
         BigDecimal totalAmount = BigDecimal.ZERO;
 
-        for (BookCreationRequest inputBookRequest : inputBooks) {
-            Books inputBook = bookService.createBook(inputBookRequest);
-
+        for (BookUpdateRequest inputBookRequest : inputBooks) {
+            bookService.updateBook(inputBookRequest.getBookId(),inputBookRequest);
+            Books inputBook = bookRepository.findById(inputBookRequest.getBookId()).orElse(null);
             BooksImportReceipts booksImportReceipt = new BooksImportReceipts();
             booksImportReceipt.setBook(inputBook);
-            booksImportReceipt.setImportReceipt(importReceipt); // Set reference
+            booksImportReceipt.setImportReceipt(importReceipt);
             booksImportReceipt.setQuantity(inputBookRequest.getQuantity());
             booksImportReceipt.setImportPrice(inputBookRequest.getImportPrice());
 

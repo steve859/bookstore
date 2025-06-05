@@ -11,5 +11,7 @@ import java.util.List;
 
 @Repository
 public interface BookRepository extends JpaRepository<Books, Integer> {
-    List<Books> findByName(String name);
+    @EntityGraph(attributePaths = {"authors", "categories"})
+    @Query("SELECT b FROM Books b WHERE b.name = :name")
+    List<Books> findByName(@Param("name") String name);
 }

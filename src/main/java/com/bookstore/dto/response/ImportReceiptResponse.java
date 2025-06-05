@@ -18,5 +18,5 @@ public class ImportReceiptResponse {
     String adminId;
     LocalDate importDate;
     BigDecimal totalAmount;
-    Set<BooksImportReceipts> bookDetails;
+//    Set<BooksImportReceipts> bookDetails;
 }

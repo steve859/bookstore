@@ -13,10 +13,11 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class BookUpdateRequest {
+    Integer bookId;
     String name;
     List<String> authors;
     List<String> categories;
-    String published_year;
+    Integer publishedYear;
     BigDecimal importPrice;
-    Integer quantity;
+    int quantity;
 }

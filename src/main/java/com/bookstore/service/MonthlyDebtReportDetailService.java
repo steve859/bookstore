@@ -38,6 +38,7 @@ public class MonthlyDebtReportDetailService {
         MonthlyDebtReports monthlyDebtReport = monthlyDebtReportRepository.findByUserIdAndReportMonth(userId,monthlyDebtReportDetail.getReportDate().withDayOfMonth(1)).orElse(null);
         if(monthlyDebtReport == null) {
             monthlyDebtReportService.createMonthlyDebtReport(userId,monthlyDebtReportDetail.getReportDate().withDayOfMonth(1));
+            monthlyDebtReport = monthlyDebtReportRepository.findByUserIdAndReportMonth(userId,monthlyDebtReportDetail.getReportDate().withDayOfMonth(1)).orElse(null);
         }
         monthlyDebtReportDetail.setDebtReport(monthlyDebtReport);
         monthlyDebtReportDetailRepository.save(monthlyDebtReportDetail);

@@ -35,6 +35,8 @@ public class PaymentReceiptService {
     private UserRepository userRepository;
     @Autowired
     private MonthlyDebtReportDetailService monthlyDebtReportDetailService;
+    @Autowired
+    private MonthlyInventoryReportDetailService monthlyInventoryReportDetailService;
 
     public PaymentReceiptResponse createPaymentReceipt(PaymentReceiptCreationRequest request) {
         PaymentReceipts paymentReceipt = paymentReceiptMapper.toPaymentReceipts(request);

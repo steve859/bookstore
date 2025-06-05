@@ -31,10 +31,10 @@ public class MonthlyDebtReportDetails {
     @Column(name = "user_id")
     String userId;
 
-    @Column(name = "report_month")
+    @Column(name = "report_date")
     LocalDate reportDate;
 
-    @Column(name = "amount", precision = 15, scale = 2)
+    @Column(name = "amount", precision = 10, scale = 2)
     BigDecimal amount;
 
     @Column(name = "type")

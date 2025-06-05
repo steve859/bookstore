@@ -20,6 +20,7 @@ import jakarta.persistence.ManyToOne;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
 import com.bookstore.dto.request.InvoiceCreationRequest;
@@ -55,8 +56,11 @@ public class InvoiceService {
     private BookService bookService;
     @Autowired
     private MonthlyDebtReportDetailService monthlyDebtReportDetailService;
+    @Autowired
+    private MonthlyInventoryReportDetailService monthlyInventoryReportDetailService;
 
     @Transactional
+    @PreAuthorize("hasRole('ADMIN')")
     public InvoiceResponse createInvoice(InvoiceCreationRequest request) {
         List<BookDeleteRequest> outputBooks = request.getBookDetails();
         Users customer = userRepository.findByPhone(request.getPhone());
@@ -72,6 +76,7 @@ public class InvoiceService {
             throw new AppException(ErrorCode.DEBT_AMOUNT_LIMIT_EXCEEDED);
         }
         Invoices inputInvoice = invoiceMapper.toInvoice(request);
+        inputInvoice.setUserId(String.valueOf(customer.getId()));
         Set<BooksInvoices> bookDetails = new HashSet<>();
         BigDecimal totalAmount = BigDecimal.ZERO;
         for(BookDeleteRequest outputBook : outputBooks ){
@@ -79,14 +84,15 @@ public class InvoiceService {
             if(book.getQuantity()-outputBook.getQuantity() < 20){
                 throw new AppException(ErrorCode.BOOK_QUANTITY_UNDER_LIMIT);
             }
-            book.setQuantity(book.getQuantity()-outputBook.getQuantity());
             BooksInvoices booksInvoice = new BooksInvoices();
-            booksInvoice.setBook(book);
             booksInvoice.setInvoice(inputInvoice);
             booksInvoice.setQuantity(outputBook.getQuantity());
             booksInvoice.setSellPrice(book.getImportPrice().multiply(BigDecimal.valueOf(1.05)));
             totalAmount = totalAmount.add(booksInvoice.getSellPrice().multiply(BigDecimal.valueOf(outputBook.getQuantity())));
             bookDetails.add(booksInvoice);
+            booksInvoice.setBook(book);
+            monthlyInventoryReportDetailService.createMonthlyInventoryReportDetail(book.getBookId(),outputBook.getQuantity(),"Export");
+            book.setQuantity(book.getQuantity()-outputBook.getQuantity());
             bookRepository.save(book);
         }
         inputInvoice.setCreateAt(LocalDate.now());
@@ -95,7 +101,7 @@ public class InvoiceService {
         inputInvoice.setBookDetails(bookDetails);
         monthlyDebtReportDetailService.createMonthlyDebtReportDetail(inputInvoice.getUserId(), totalAmount, "Debit");
         if(inputInvoice.getPaidAmount().compareTo(BigDecimal.ZERO) > 0){
-            monthlyDebtReportDetailService.createMonthlyDebtReportDetail(inputInvoice.getUserId(), totalAmount, "Credit");
+            monthlyDebtReportDetailService.createMonthlyDebtReportDetail(inputInvoice.getUserId(), inputInvoice.getPaidAmount(), "Credit");
         }
         if(inputInvoice.getDebtAmount().compareTo(BigDecimal.ZERO) > 0){
             customer.setDebtAmount(customer.getDebtAmount().add(inputInvoice.getDebtAmount()));

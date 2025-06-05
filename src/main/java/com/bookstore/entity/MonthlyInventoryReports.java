@@ -4,6 +4,9 @@ import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
+import java.time.LocalDate;
+import java.util.List;
+
 @Entity
 @Data
 @Builder
@@ -32,4 +35,10 @@ public class MonthlyInventoryReports {
 
     @Column(name = "closing_stock")
     Integer closingStock;
+
+    @Column(name = "report_month")
+    LocalDate reportMonth;
+
+    @OneToMany(mappedBy = "inventoryReport", cascade = CascadeType.ALL)
+    List<MonthlyInventoryReportDetails> details;
 }

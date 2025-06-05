@@ -37,6 +37,8 @@ public class MonthlyDebtReportService {
                 .userId(userId)
                 .reportMonth(reportDate)
                 .openingDebt(user.getDebtAmount())
+                .debtIncrease(BigDecimal.ZERO)
+                .debtPayment(BigDecimal.ZERO)
                 .closingDebt(user.getDebtAmount())
                 .details(new ArrayList<>())
                 .build();
