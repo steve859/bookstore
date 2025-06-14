@@ -2,7 +2,6 @@ package com.bookstore.controller;
 
 import java.util.List;
 
-import com.bookstore.entity.Books;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -19,6 +18,7 @@ import com.bookstore.dto.request.ApiResponse;
 import com.bookstore.dto.request.BookCreationRequest;
 import com.bookstore.dto.request.BookUpdateRequest;
 import com.bookstore.dto.response.BookResponse;
+import com.bookstore.entity.Books;
 import com.bookstore.service.BookService;
 
 import lombok.AccessLevel;
@@ -62,5 +62,10 @@ public class BookController {
     ApiResponse<String> deleteBook(@PathVariable("bookId") Integer bookId) {
         bookService.deleteBook(bookId);
         return ApiResponse.<String>builder().result("Book has been deleted").build();
+    }
+
+    @PutMapping("/edit/{bookId}")
+    ApiResponse<BookResponse> editBook(@PathVariable Integer bookId, @RequestBody BookCreationRequest entity) {
+        return ApiResponse.<BookResponse>builder().result(bookService.editBook(bookId, entity)).build();
     }
 }

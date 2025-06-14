@@ -21,6 +21,6 @@ public class BookResponse {
     Integer publishedYear;
     BigDecimal importPrice;
     int quantity;
-//    Set<AuthorResponse> authors;
-//    Set<CategoryResponse> categories;
+    Set<AuthorResponse> authors;
+    Set<CategoryResponse> categories;
 }

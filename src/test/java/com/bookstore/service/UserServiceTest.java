@@ -54,7 +54,7 @@ public class UserServiceTest {
                 .dob(dob)
                 .build();
         user = Users.builder()
-                .id(1234)
+                .id("1234")
                 .username("john")
                 .firstName("John")
                 .lastName("Doe")
