@@ -2,7 +2,7 @@ package com.bookstore.service;
 
 import java.util.HashSet;
 import java.util.List;
-import java.util.Optional;
+import java.util.Set;
 
 import org.hibernate.Hibernate;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -72,15 +72,35 @@ public class UserService {
                 .orElseThrow(() -> new RuntimeException("User not found")));
     }
 
-    public UserResponse updateUser(String userId, UserUpdateRequest request) {
+    public UserResponse updateUser(String userId, UserUpdateRequest req) {
         Users user = userRepository.findById(userId)
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
 
-        userMapper.updateUser(user, request);
-        user.setPassword(passwordEncoder.encode(request.getPassword()));
-        var roles = roleRepository.findAllById(request.getRoles());
-        user.setRoles(new HashSet<>(roles));
-        return userMapper.toUserResponse(userRepository.save(user));
+        if (req.getFirstName() != null && !req.getFirstName().isBlank()) {
+            user.setFirstName(req.getFirstName());
+        }
+        if (req.getLastName() != null && !req.getLastName().isBlank()) {
+            user.setLastName(req.getLastName());
+        }
+        if (req.getPassword() != null && !req.getPassword().isBlank()) {
+            user.setPassword(passwordEncoder.encode(req.getPassword()));
+        }
+        if (req.getDob() != null) {
+            user.setDob(req.getDob());
+        }
+        if (req.getPhone() != null && !req.getPhone().isBlank()) {
+            user.setPhone(req.getPhone());
+        }
+        if (req.getRoles() != null && !req.getRoles().isEmpty()) {
+            // biến List<String> roles -> Set<Role> tương tự resolveCategories
+            user.setRoles(resolveRoles(req.getRoles()));
+        }
+        // userMapper.updateUser(user, request);
+        // user.setPassword(passwordEncoder.encode(request.getPassword()));
+        // var roles = roleRepository.findAllById(request.getRoles());
+        // user.setRoles(new HashSet<>(roles));
+        Users saved = userRepository.save(user);
+        return userMapper.toUserResponse(saved);
     }
 
     public void deleteUser(String userId) {
@@ -103,5 +123,21 @@ public class UserService {
         return userMapper.toUserResponse(user);
     }
 
-//    public Users getUserEntity(){}
+    // public Users getUserEntity(){}
+    private Set<Roles> resolveRoles(List<String> rolesString) {
+        Set<Roles> rolesSet = new HashSet<>();
+        for (String roleName : rolesString) {
+            // tìm role đã tồn tại
+            Roles role = roleRepository.findByName(roleName)
+                    .orElseGet(() -> {
+                        // nếu chưa có thì tạo mới và lưu
+                        Roles newRole = Roles.builder()
+                                .name(roleName)
+                                .build();
+                        return roleRepository.save(newRole);
+                    });
+            rolesSet.add(role);
+        }
+        return rolesSet;
+    }
 }

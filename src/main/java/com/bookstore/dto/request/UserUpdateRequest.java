@@ -1,13 +1,12 @@
 package com.bookstore.dto.request;
 
+import java.time.LocalDate;
+import java.util.List;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.util.List;
-
-import java.time.LocalDate;
 
 @Data
 @Builder
@@ -18,5 +17,6 @@ public class UserUpdateRequest {
     String firstName;
     String lastName;
     LocalDate dob;
+    String phone;
     List<String> roles;
 }
