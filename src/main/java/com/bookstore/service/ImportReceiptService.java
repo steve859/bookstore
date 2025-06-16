@@ -7,6 +7,9 @@ import java.util.List;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.oauth2.jwt.Jwt;
+import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,6 +26,7 @@ import com.bookstore.mapper.BookMapper;
 import com.bookstore.mapper.ImportReceiptMapper;
 import com.bookstore.repository.BookRepository;
 import com.bookstore.repository.ImportReceiptRepository;
+import com.bookstore.repository.UserRepository;
 
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -43,9 +47,22 @@ public class ImportReceiptService {
     private BookMapper bookMapper;
     @Autowired
     private BookRepository bookRepository;
+    @Autowired
+    UserRepository userRepository;
 
     @Transactional
     public ImportReceiptResponse createImportReceipt(ImportReceiptCreationRequest request) {
+        var auth = SecurityContextHolder.getContext().getAuthentication();
+        String adminId;
+        if (auth instanceof JwtAuthenticationToken) {
+            Jwt jwt = ((JwtAuthenticationToken) auth).getToken();
+            adminId = jwt.getClaim("id");
+        } else {
+            String username = auth.getName();
+            adminId = userRepository.findByUsername(username)
+                    .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED))
+                    .getId();
+        }
         List<BookUpdateRequest> inputBooks = request.getBookDetails();
         int totalQuantity = inputBooks.stream().mapToInt(BookUpdateRequest::getQuantity).sum();
 
@@ -77,6 +94,7 @@ public class ImportReceiptService {
 
         importReceipt.setTotalAmount(totalAmount);
         importReceipt.setBookDetails(booksImportReceiptsSet);
+        importReceipt.setAdminId(adminId);
 
         ImportReceipts savedImportReceipt = importReceiptRepository.save(importReceipt);
 
