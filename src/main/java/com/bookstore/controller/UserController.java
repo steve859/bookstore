@@ -2,7 +2,6 @@ package com.bookstore.controller;
 
 import java.util.List;
 
-import com.bookstore.entity.Users;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -50,6 +49,13 @@ public class UserController {
         authentication.getAuthorities().forEach(grantedAuthority -> log.info(grantedAuthority.getAuthority()));
         return ApiResponse.<List<UserResponse>>builder()
                 .result(userService.getUsers())
+                .build();
+    }
+
+    @GetMapping("/except-admin")
+    ApiResponse<List<UserResponse>> getUsersExceptAdmin() {
+        return ApiResponse.<List<UserResponse>>builder()
+                .result(userService.getUserExceptAdmin())
                 .build();
     }
 

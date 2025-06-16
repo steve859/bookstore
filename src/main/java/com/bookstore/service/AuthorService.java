@@ -33,6 +33,7 @@ public class AuthorService {
 
     public AuthorResponse createAuthor(AuthorCreationRequest request) {
         Authors author = authorMapper.toAuthor(request);
+        log.info(request.getAuthorName());
         return authorMapper.toAuthorResponse(authorRepository.save(author));
     }
 

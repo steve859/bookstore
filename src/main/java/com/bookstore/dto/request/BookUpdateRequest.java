@@ -19,5 +19,5 @@ public class BookUpdateRequest {
     List<String> categories;
     Integer publishedYear;
     BigDecimal importPrice;
-    int quantity;
+    Integer quantity;
 }

@@ -4,7 +4,6 @@ import java.math.BigDecimal;
 import java.util.HashSet;
 import java.util.Set;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -16,7 +15,14 @@ import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 import lombok.experimental.FieldDefaults;
 
 @Entity
@@ -25,8 +31,8 @@ import lombok.experimental.FieldDefaults;
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-@ToString(exclude = {"categories", "authors", "importDetails"})
-@EqualsAndHashCode(exclude = {"categories", "authors", "importDetails"})
+@ToString(exclude = { "categories", "authors", "importDetails" })
+@EqualsAndHashCode(exclude = { "categories", "authors", "importDetails" })
 @Getter
 @Setter
 public class Books {
@@ -46,7 +52,7 @@ public class Books {
     BigDecimal importPrice;
 
     @Column(name = "quantity")
-    int quantity;
+    Integer quantity;
 
     @ManyToMany
     @JoinTable(name = "books_categories", joinColumns = @JoinColumn(name = "book_id"), inverseJoinColumns = @JoinColumn(name = "category_id"))

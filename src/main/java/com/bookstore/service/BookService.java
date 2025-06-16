@@ -1,15 +1,11 @@
 package com.bookstore.service;
 
 import java.math.BigDecimal;
-import java.text.Normalizer;
-import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
-import java.util.stream.Collectors;
 
-import com.bookstore.repository.MonthlyInventoryReportDetailRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -83,11 +79,11 @@ public class BookService {
         if (booksWithSameName.isEmpty()) {
             return Optional.empty();
         }
-        for(Books book : booksWithSameName) {
-            if(inputAuthorNames.size() != book.getAuthors().size()) {
+        for (Books book : booksWithSameName) {
+            if (inputAuthorNames.size() != book.getAuthors().size()) {
                 continue;
             }
-            if(publishedYear != book.getPublishedYear()) {
+            if (publishedYear != book.getPublishedYear()) {
                 continue;
             }
             return Optional.of(book);
@@ -98,7 +94,8 @@ public class BookService {
     @Transactional
     public Books createBook(BookCreationRequest request) {
         Books book;
-        Optional<Books> bookAvailable = IsBookAvailable(request.getName(), request.getAuthors(), request.getPublishedYear());
+        Optional<Books> bookAvailable = IsBookAvailable(request.getName(), request.getAuthors(),
+                request.getPublishedYear());
         if (bookAvailable.isEmpty()) {
             request.setImportPrice(new BigDecimal(0));
             request.setQuantity(0);
@@ -126,23 +123,36 @@ public class BookService {
         }
     }
 
-//    public BookResponse updateBook(Integer bookId, BookUpdateRequest request) {
-//        Books book = bookRepository.findById(bookId)
-//                .orElseThrow(() -> new AppException(ErrorCode.BOOK_NOT_EXISTED));
-//        bookMapper.updateBook(book, request);
-//        return bookMapper.toBookResponse(bookRepository.save(book));
-//    }
+    // public BookResponse updateBook(Integer bookId, BookUpdateRequest request) {
+    // Books book = bookRepository.findById(bookId)
+    // .orElseThrow(() -> new AppException(ErrorCode.BOOK_NOT_EXISTED));
+    // bookMapper.updateBook(book, request);
+    // return bookMapper.toBookResponse(bookRepository.save(book));
+    // }
 
     public BookResponse updateBook(Integer bookId, BookUpdateRequest request) {
         Books book = bookRepository.findById(bookId).orElse(null);
         if (book == null) {
             throw new AppException(ErrorCode.BOOK_NOT_EXISTED);
         }
-        monthlyInventoryReportDetailService.createMonthlyInventoryReportDetail(bookId,request.getQuantity(),"Import");
+        monthlyInventoryReportDetailService.createMonthlyInventoryReportDetail(bookId, request.getQuantity(), "Import");
         request.setQuantity(book.getQuantity() + request.getQuantity());
         book.setAuthors(resolveAuthors(request.getAuthors()));
         book.setCategories(resolveCategories(request.getCategories()));
         bookMapper.updateBook(book, request);
         return bookMapper.toBookResponse(bookRepository.save(book));
+    }
+
+    public BookResponse editBook(Integer bookId, BookCreationRequest request) {
+        Books book = bookRepository.findById(bookId)
+                .orElseThrow(() -> new AppException(ErrorCode.BOOK_NOT_EXISTED));
+        book.setName(request.getName());
+        book.setPublishedYear(request.getPublishedYear());
+        book.setImportPrice(request.getImportPrice());
+        // book.setQuantity(request.getQuantity());
+        book.setAuthors(resolveAuthors(request.getAuthors()));
+        book.setCategories(resolveCategories(request.getCategories()));
+        Books updated = bookRepository.save(book);
+        return bookMapper.toBookResponse(bookRepository.save(updated));
     }
 }
