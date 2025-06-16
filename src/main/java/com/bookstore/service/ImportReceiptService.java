@@ -6,13 +6,11 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import com.bookstore.dto.request.BookUpdateRequest;
-import com.bookstore.repository.BookRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.bookstore.dto.request.BookCreationRequest;
+import com.bookstore.dto.request.BookUpdateRequest;
 import com.bookstore.dto.request.ImportReceiptCreationRequest;
 import com.bookstore.dto.request.ImportReceiptUpdateRequest;
 import com.bookstore.dto.response.ImportReceiptResponse;
@@ -23,6 +21,7 @@ import com.bookstore.exception.AppException;
 import com.bookstore.exception.ErrorCode;
 import com.bookstore.mapper.BookMapper;
 import com.bookstore.mapper.ImportReceiptMapper;
+import com.bookstore.repository.BookRepository;
 import com.bookstore.repository.ImportReceiptRepository;
 
 import lombok.AccessLevel;
@@ -61,7 +60,7 @@ public class ImportReceiptService {
         BigDecimal totalAmount = BigDecimal.ZERO;
 
         for (BookUpdateRequest inputBookRequest : inputBooks) {
-            bookService.updateBook(inputBookRequest.getBookId(),inputBookRequest);
+            bookService.updateBook(inputBookRequest.getBookId(), inputBookRequest);
             Books inputBook = bookRepository.findById(inputBookRequest.getBookId()).orElse(null);
             BooksImportReceipts booksImportReceipt = new BooksImportReceipts();
             booksImportReceipt.setBook(inputBook);
