@@ -19,6 +19,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -60,8 +61,9 @@ public class MonthlyDebtReportService {
         monthlyDebtReport.setClosingDebt(monthlyDebtReport.getOpeningDebt().add(monthlyDebtReport.getDebtIncrease()).subtract(monthlyDebtReport.getDebtPayment()));
         return monthlyDebtReportMapper.toMonthlyDebtReportResponse(monthlyDebtReportRepository.save(monthlyDebtReport));
     }
-    public List<MonthlyDebtReportResponse> getMonthlyDebtReports() {
-        return monthlyDebtReportRepository.findAll().stream().map(monthlyDebtReportMapper::toMonthlyDebtReportResponse).toList();
+
+    public List<MonthlyDebtReportResponse> getMonthlyDebtReports(LocalDate reportMonth) {
+        return monthlyDebtReportRepository.findAllByReportMonth(reportMonth.withDayOfMonth(1)).stream().map(monthlyDebtReportMapper::toMonthlyDebtReportResponse).toList();
     }
 
     public MonthlyDebtReportResponse getMonthlyDebtReport(Integer debtReportId) {

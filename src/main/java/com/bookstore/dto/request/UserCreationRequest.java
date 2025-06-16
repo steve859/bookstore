@@ -1,6 +1,7 @@
 package com.bookstore.dto.request;
 
 import java.time.LocalDate;
+import java.util.List;
 
 import jakarta.validation.constraints.Size;
 import lombok.AccessLevel;
@@ -25,5 +26,5 @@ public class UserCreationRequest {
     String email;
     String phone;
     LocalDate dob;
-
+//    List<String> roles;
 }

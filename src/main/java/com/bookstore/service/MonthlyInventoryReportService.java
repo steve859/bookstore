@@ -1,5 +1,6 @@
 package com.bookstore.service;
 
+import com.bookstore.dto.response.MonthlyDebtReportResponse;
 import com.bookstore.dto.response.MonthlyInventoryReportResponse;
 import com.bookstore.entity.*;
 import com.bookstore.exception.AppException;
@@ -43,6 +44,10 @@ public class MonthlyInventoryReportService {
                 .details(new ArrayList<>())
                 .build();
         return monthlyInventoryReportMapper.toMonthlyInventoryReportResponse(monthlyInventoryReportRepository.save(monthlyInventoryReport));
+    }
+
+    public List<MonthlyInventoryReportResponse> getMonthlyInventoryReports(LocalDate reportMonth) {
+        return monthlyInventoryReportRepository.findAllByReportMonth(reportMonth.withDayOfMonth(1)).stream().map(monthlyInventoryReportMapper::toMonthlyInventoryReportResponse).toList();
     }
 
     public MonthlyInventoryReportResponse updateMonthlyInventoryReport(MonthlyInventoryReportDetails monthlyInventoryReportDetail, int amount, String type) {
