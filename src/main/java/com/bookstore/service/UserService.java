@@ -1,5 +1,6 @@
 package com.bookstore.service;
 
+import java.math.BigDecimal;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
@@ -46,6 +47,7 @@ public class UserService {
             throw new AppException(ErrorCode.USER_EXISTED);
 
         Users user = userMapper.toUser(request);
+        user.setDebtAmount(BigDecimal.ZERO);
         PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10);
         user.setPassword(passwordEncoder.encode(request.getPassword()));
         HashSet<Roles> roles = new HashSet<>();

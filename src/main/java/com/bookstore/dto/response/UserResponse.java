@@ -3,6 +3,7 @@ package com.bookstore.dto.response;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Set;
 
@@ -20,5 +21,6 @@ public class UserResponse {
     String email;
     String phone;
     LocalDate dob;
+    BigDecimal debtAmount;
     Set<RoleResponse> roles;
 }
