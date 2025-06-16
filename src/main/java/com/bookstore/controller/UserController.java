@@ -52,6 +52,13 @@ public class UserController {
                 .build();
     }
 
+    @GetMapping("/except-admin")
+    ApiResponse<List<UserResponse>> getUsersExceptAdmin() {
+        return ApiResponse.<List<UserResponse>>builder()
+                .result(userService.getUserExceptAdmin())
+                .build();
+    }
+
     @GetMapping("/{userId}")
     ApiResponse<UserResponse> getUser(@PathVariable("userId") String userId) {
         return ApiResponse.<UserResponse>builder()

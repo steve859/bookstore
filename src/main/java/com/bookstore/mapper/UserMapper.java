@@ -13,6 +13,7 @@ import com.bookstore.entity.Users;
 public interface UserMapper {
     Users toUser(UserCreationRequest request);
 
+    @Mapping(target = "debtAmount", source = "debtAmount")
     UserResponse toUserResponse(Users user);
 
     @Mapping(target = "roles", ignore = true)

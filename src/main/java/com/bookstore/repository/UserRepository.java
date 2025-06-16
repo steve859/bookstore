@@ -1,8 +1,11 @@
 package com.bookstore.repository;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import com.bookstore.entity.Users;
@@ -14,4 +17,12 @@ public interface UserRepository extends JpaRepository<Users, String> {
     Users findByPhone(String phone);
 
     Optional<Users> findByUsername(String username);
+
+    @Query("""
+            select u from Users u
+            join u.roles r
+            where r.name <> :roleName
+            """)
+    List<Users> findAllByRoleNot(@Param("roleName") String roleName);
+
 }

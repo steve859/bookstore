@@ -3,6 +3,7 @@ package com.bookstore.service;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.hibernate.Hibernate;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -139,5 +140,11 @@ public class UserService {
             rolesSet.add(role);
         }
         return rolesSet;
+    }
+
+    public List<UserResponse> getUserExceptAdmin() {
+        return userRepository.findAllByRoleNot(PredefinedRole.ADMIN_ROLE).stream()
+                .map(userMapper::toUserResponse)
+                .collect(Collectors.toList());
     }
 }
