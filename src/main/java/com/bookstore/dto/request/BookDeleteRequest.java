@@ -11,5 +11,5 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class BookDeleteRequest {
     Integer bookId;
-    int quantity;
+    Integer quantity;
 }
