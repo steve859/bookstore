@@ -116,6 +116,11 @@ public class BookService {
         return bookRepository.findById(bookId).orElseThrow(() -> new RuntimeException("Book not found"));
     }
 
+    public BookResponse getBookDTOById(Integer bookId) {
+        return bookMapper.toBookResponse(
+                bookRepository.findById(bookId).orElseThrow(() -> new RuntimeException("Book not found")));
+    }
+
     public void deleteBook(Integer bookId) {
         Books book = bookRepository.findById(bookId).orElse(null);
         if (book != null) {

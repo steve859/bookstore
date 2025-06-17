@@ -8,13 +8,14 @@ import java.util.Set;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import com.bookstore.dto.request.BookUpdateRequest;
-import com.bookstore.repository.BookRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.oauth2.jwt.Jwt;
+import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.bookstore.dto.request.BookCreationRequest;
+import com.bookstore.dto.request.BookUpdateRequest;
 import com.bookstore.dto.request.ImportReceiptCreationRequest;
 import com.bookstore.dto.request.ImportReceiptUpdateRequest;
 import com.bookstore.dto.response.ImportReceiptResponse;
@@ -25,7 +26,9 @@ import com.bookstore.exception.AppException;
 import com.bookstore.exception.ErrorCode;
 import com.bookstore.mapper.BookMapper;
 import com.bookstore.mapper.ImportReceiptMapper;
+import com.bookstore.repository.BookRepository;
 import com.bookstore.repository.ImportReceiptRepository;
+import com.bookstore.repository.UserRepository;
 
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -46,9 +49,22 @@ public class ImportReceiptService {
     private BookMapper bookMapper;
     @Autowired
     private BookRepository bookRepository;
+    @Autowired
+    UserRepository userRepository;
 
     @Transactional
     public ImportReceiptResponse createImportReceipt(ImportReceiptCreationRequest request) {
+        var auth = SecurityContextHolder.getContext().getAuthentication();
+        String adminId;
+        if (auth instanceof JwtAuthenticationToken) {
+            Jwt jwt = ((JwtAuthenticationToken) auth).getToken();
+            adminId = jwt.getClaim("id");
+        } else {
+            String username = auth.getName();
+            adminId = userRepository.findByUsername(username)
+                    .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED))
+                    .getId();
+        }
         List<BookUpdateRequest> inputBooks = request.getBookDetails();
         int totalQuantity = inputBooks.stream().mapToInt(BookUpdateRequest::getQuantity).sum();
 
@@ -63,7 +79,7 @@ public class ImportReceiptService {
         BigDecimal totalAmount = BigDecimal.ZERO;
 
         for (BookUpdateRequest inputBookRequest : inputBooks) {
-            bookService.updateBook(inputBookRequest.getBookId(),inputBookRequest);
+            bookService.updateBook(inputBookRequest.getBookId(), inputBookRequest);
             Books inputBook = bookRepository.findById(inputBookRequest.getBookId()).orElse(null);
             BooksImportReceipts booksImportReceipt = new BooksImportReceipts();
             booksImportReceipt.setBook(inputBook);
@@ -79,6 +95,7 @@ public class ImportReceiptService {
 
         importReceipt.setTotalAmount(totalAmount);
         importReceipt.setBookDetails(booksImportReceiptsSet);
+        importReceipt.setAdminId(adminId);
 
         ImportReceipts savedImportReceipt = importReceiptRepository.save(importReceipt);
 

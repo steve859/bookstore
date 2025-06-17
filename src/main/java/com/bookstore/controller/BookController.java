@@ -52,6 +52,13 @@ public class BookController {
         return ApiResponse.<Books>builder().result(bookService.getBook(bookId)).build();
     }
 
+    @GetMapping("/dto/{bookId}")
+    ApiResponse<BookResponse> getBookDTOById(@PathVariable Integer bookId) {
+        return ApiResponse.<BookResponse>builder()
+                .result(bookService.getBookDTOById(bookId))
+                .build();
+    }
+
     @PutMapping("/{bookId}")
     ApiResponse<BookResponse> updateBook(@PathVariable("bookId") Integer bookId,
             @RequestBody BookUpdateRequest request) {

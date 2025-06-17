@@ -1,14 +1,13 @@
 package com.bookstore.dto.response;
 
-import com.bookstore.entity.MonthlyInventoryReportDetails;
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
-import jakarta.persistence.OneToMany;
-import lombok.*;
-import lombok.experimental.FieldDefaults;
-
 import java.time.LocalDate;
-import java.util.List;
+
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.experimental.FieldDefaults;
 
 @Data
 @Builder
@@ -18,10 +17,11 @@ import java.util.List;
 public class MonthlyInventoryReportResponse {
     Integer inventoryReportId;
     Integer bookId;
+    String bookName;
     Integer openingStock;
     Integer stockIncrease;
     Integer stockDecrease;
     Integer closingStock;
     LocalDate reportMonth;
-//    List<MonthlyInventoryReportDetails> details;
+    // List<MonthlyInventoryReportDetails> details;
 }
