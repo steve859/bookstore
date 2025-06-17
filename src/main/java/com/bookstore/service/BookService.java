@@ -136,10 +136,9 @@ public class BookService {
             throw new AppException(ErrorCode.BOOK_NOT_EXISTED);
         }
         monthlyInventoryReportDetailService.createMonthlyInventoryReportDetail(bookId, request.getQuantity(), "Import");
-        request.setQuantity(book.getQuantity() + request.getQuantity());
-        book.setAuthors(resolveAuthors(request.getAuthors()));
-        book.setCategories(resolveCategories(request.getCategories()));
-        bookMapper.updateBook(book, request);
+        int temp = book.getQuantity() + request.getQuantity();
+        book.setImportPrice(request.getImportPrice());
+        book.setQuantity(temp);
         return bookMapper.toBookResponse(bookRepository.save(book));
     }
 

@@ -5,6 +5,8 @@ import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import com.bookstore.dto.request.BookUpdateRequest;
 import com.bookstore.repository.BookRepository;
@@ -66,12 +68,11 @@ public class ImportReceiptService {
             BooksImportReceipts booksImportReceipt = new BooksImportReceipts();
             booksImportReceipt.setBook(inputBook);
             booksImportReceipt.setImportReceipt(importReceipt);
-            booksImportReceipt.setQuantity(inputBookRequest.getQuantity());
-            booksImportReceipt.setImportPrice(inputBookRequest.getImportPrice());
-
             BigDecimal lineAmount = inputBookRequest.getImportPrice()
                     .multiply(BigDecimal.valueOf(inputBookRequest.getQuantity()));
             totalAmount = totalAmount.add(lineAmount);
+            booksImportReceipt.setQuantity(inputBookRequest.getQuantity());
+            booksImportReceipt.setImportPrice(inputBookRequest.getImportPrice());
 
             booksImportReceiptsSet.add(booksImportReceipt);
         }
@@ -93,11 +94,83 @@ public class ImportReceiptService {
                 .orElseThrow(() -> new RuntimeException("Import receipt not found")));
     }
 
+
     public ImportReceiptResponse updateImportReceipt(Integer importRequestId, ImportReceiptUpdateRequest request) {
         ImportReceipts importReceipt = importReceiptRepository.findById(importRequestId)
                 .orElseThrow(() -> new AppException(ErrorCode.IMPORT_RECEIPT_NOT_EXISTED));
-        importReceiptMapper.updateImportReceipts(importReceipt, request);
-        return importReceiptMapper.toImportReceiptResponse(importReceiptRepository.save(importReceipt));
+
+        List<BookUpdateRequest> inputBooks = request.getBookDetails();
+        int totalQuantity = inputBooks.stream().mapToInt(BookUpdateRequest::getQuantity).sum();
+
+        if (totalQuantity < 150) {
+            throw new AppException(ErrorCode.INSUFFICIENT_IMPORT_QUANTITY);
+        }
+
+        // Tạo map từ bookId -> BooksImportReceipts hiện tại
+        Map<Integer, BooksImportReceipts> existingBookDetailsMap = importReceipt.getBookDetails().stream()
+                .collect(Collectors.toMap(
+                        b -> b.getBook().getBookId(),
+                        b -> b
+                ));
+
+        // Tạo map số lượng cũ để tính chênh lệch
+        Map<Integer, Integer> oldQuantityMap = importReceipt.getBookDetails().stream()
+                .collect(Collectors.toMap(
+                        b -> b.getBook().getBookId(),
+                        BooksImportReceipts::getQuantity
+                ));
+
+        Set<Integer> processedBookIds = new HashSet<>();
+
+        for (BookUpdateRequest inputBookRequest : inputBooks) {
+            int newQuantity = inputBookRequest.getQuantity();
+            int oldQuantity = oldQuantityMap.getOrDefault(inputBookRequest.getBookId(), 0);
+            int quantityDiff = newQuantity - oldQuantity;
+
+            // Cập nhật số lượng trong kho (chỉ cập nhật chênh lệch)
+            int originalQuantity = inputBookRequest.getQuantity();
+            inputBookRequest.setQuantity(quantityDiff);
+            bookService.updateBook(inputBookRequest.getBookId(), inputBookRequest);
+            inputBookRequest.setQuantity(originalQuantity); // Khôi phục quantity gốc
+
+            // Kiểm tra xem sách đã có trong phiếu nhập chưa
+            BooksImportReceipts booksImportReceipt = existingBookDetailsMap.get(inputBookRequest.getBookId());
+
+            if (booksImportReceipt != null) {
+                // CẬP NHẬT item có sẵn
+                booksImportReceipt.setQuantity(newQuantity);
+                booksImportReceipt.setImportPrice(inputBookRequest.getImportPrice());
+            } else {
+                // THÊM MỚI item chưa có
+                Books inputBook = bookRepository.findById(inputBookRequest.getBookId()).orElse(null);
+                booksImportReceipt = new BooksImportReceipts();
+                booksImportReceipt.setBook(inputBook);
+                booksImportReceipt.setImportReceipt(importReceipt);
+                booksImportReceipt.setQuantity(newQuantity);
+                booksImportReceipt.setImportPrice(inputBookRequest.getImportPrice());
+
+                // Thêm vào collection hiện tại
+                importReceipt.getBookDetails().add(booksImportReceipt);
+            }
+
+            processedBookIds.add(inputBookRequest.getBookId());
+        }
+
+        // XÓA những sách không có trong request mới (nếu cần)
+        importReceipt.getBookDetails().removeIf(detail ->
+                !processedBookIds.contains(detail.getBook().getBookId())
+        );
+
+        // TÍNH LẠI TỔNG TIỀN SAU KHI ĐÃ XỬ LÝ XONG TẤT CẢ
+        BigDecimal totalAmount = importReceipt.getBookDetails().stream()
+                .map(detail -> detail.getImportPrice().multiply(BigDecimal.valueOf(detail.getQuantity())))
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+        importReceipt.setTotalAmount(totalAmount);
+
+        ImportReceipts savedImportReceipt = importReceiptRepository.save(importReceipt);
+
+        return importReceiptMapper.toImportReceiptResponse(savedImportReceipt);
     }
 
     public void deleteImportReceipt(Integer importReceiptId) {
