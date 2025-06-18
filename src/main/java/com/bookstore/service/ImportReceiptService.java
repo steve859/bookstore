@@ -49,6 +49,8 @@ public class ImportReceiptService {
     private BookRepository bookRepository;
     @Autowired
     UserRepository userRepository;
+    @Autowired
+    ParameterService parameterService;
 
     @Transactional
     public ImportReceiptResponse createImportReceipt(ImportReceiptCreationRequest request) {
@@ -65,8 +67,9 @@ public class ImportReceiptService {
         }
         List<BookUpdateRequest> inputBooks = request.getBookDetails();
         int totalQuantity = inputBooks.stream().mapToInt(BookUpdateRequest::getQuantity).sum();
-
-        if (totalQuantity < 150) {
+        Double paramValue = parameterService.getParamValue("minImportQuantity");
+        Integer minImportQuantity = paramValue != null ? paramValue.intValue() : 0;
+        if (totalQuantity < minImportQuantity) {
             throw new AppException(ErrorCode.INSUFFICIENT_IMPORT_QUANTITY);
         }
 

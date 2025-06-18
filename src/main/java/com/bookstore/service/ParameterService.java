@@ -15,6 +15,17 @@ import lombok.RequiredArgsConstructor;
 public class ParameterService {
     private final ParameterRepository parameterRepository;
 
+    public double getParamValue(String name) {
+        return parameterRepository.findByParamName(name)
+                .map(Parameters::getValue)
+                .orElseThrow(() -> new RuntimeException("Parameter not found: " + name));
+    }
+
+    public void setParamValue(String name, double value) {
+        Parameters param = new Parameters(name, value);
+        parameterRepository.save(param);
+    }
+
     public void save(String name, Double value) {
         parameterRepository.save(new Parameters(name, value));
     }
