@@ -6,6 +6,8 @@ import com.bookstore.entity.MonthlyDebtReportDetails;
 import com.bookstore.entity.MonthlyDebtReports;
 import com.bookstore.entity.MonthlyInventoryReportDetails;
 import com.bookstore.entity.MonthlyInventoryReports;
+import com.bookstore.exception.AppException;
+import com.bookstore.exception.ErrorCode;
 import com.bookstore.mapper.MonthlyDebtReportDetailMapper;
 import com.bookstore.mapper.MonthlyInventoryReportDetailMapper;
 import com.bookstore.mapper.MonthlyInventoryReportMapper;
@@ -54,4 +56,9 @@ public class MonthlyInventoryReportDetailService {
         monthlyInventoryReportService.updateMonthlyInventoryReport(monthlyInventoryReportDetail,amount,type);
         return monthlyInventoryReportDetailMapper.toMonthlyInventoryReportDetailResponse(monthlyInventoryReportDetail);
     }
+
+//    public MonthlyInventoryReportDetailResponse updateMonthlyInventoryReportDetail(Integer monthlyInventoryReportDetailId, int amount) {
+//        MonthlyInventoryReportDetails monthlyInventoryReportDetail = monthlyInventoryReportDetailRepository.findById(monthlyInventoryReportDetailId).orElseThrow(()->new AppException(ErrorCode.MONTHLY_INVENTORY_REPORT_DETAIL_NOT_EXISTED));
+//
+//    }
 }

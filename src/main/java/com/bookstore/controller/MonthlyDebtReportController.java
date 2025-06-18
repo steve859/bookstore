@@ -30,6 +30,8 @@ public class MonthlyDebtReportController {
         authentication.getAuthorities().forEach(grantedAuthority -> log.info(grantedAuthority.getAuthority()));
         return ApiResponse.<List<MonthlyDebtReportResponse>>builder().result(monthlyDebtReportService.getMonthlyDebtReports(LocalDate.of(year, month, 1))).build();
     }
+
+
 //    @GetMapping("/{debtReportId}")
 //    ApiResponse<MonthlyDebtReportResponse> getMonthlyDebtReport(@PathVariable("debtReportId") Integer debtReportId) {
 //        return ApiResponse.<MonthlyDebtReportResponse>builder().result(monthlyDebtReportService.getMonthlyDebtReport(debtReportId)).build();

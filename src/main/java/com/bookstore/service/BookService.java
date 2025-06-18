@@ -159,4 +159,10 @@ public class BookService {
         Books updated = bookRepository.save(book);
         return bookMapper.toBookResponse(bookRepository.save(updated));
     }
+
+    public BookResponse updateBookQuantity(Integer bookId, Integer quantity) {
+        Books book = bookRepository.findById(bookId).orElse(null);
+        book.setQuantity(book.getQuantity() + quantity);
+        return bookMapper.toBookResponse(bookRepository.save(book));
+    }
 }

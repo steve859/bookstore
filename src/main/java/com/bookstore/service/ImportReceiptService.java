@@ -111,7 +111,6 @@ public class ImportReceiptService {
                 .orElseThrow(() -> new RuntimeException("Import receipt not found")));
     }
 
-
     public ImportReceiptResponse updateImportReceipt(Integer importRequestId, ImportReceiptUpdateRequest request) {
         ImportReceipts importReceipt = importReceiptRepository.findById(importRequestId)
                 .orElseThrow(() -> new AppException(ErrorCode.IMPORT_RECEIPT_NOT_EXISTED));
@@ -123,14 +122,12 @@ public class ImportReceiptService {
             throw new AppException(ErrorCode.INSUFFICIENT_IMPORT_QUANTITY);
         }
 
-        // Tạo map từ bookId -> BooksImportReceipts hiện tại
         Map<Integer, BooksImportReceipts> existingBookDetailsMap = importReceipt.getBookDetails().stream()
                 .collect(Collectors.toMap(
                         b -> b.getBook().getBookId(),
                         b -> b
                 ));
 
-        // Tạo map số lượng cũ để tính chênh lệch
         Map<Integer, Integer> oldQuantityMap = importReceipt.getBookDetails().stream()
                 .collect(Collectors.toMap(
                         b -> b.getBook().getBookId(),
@@ -143,42 +140,39 @@ public class ImportReceiptService {
             int newQuantity = inputBookRequest.getQuantity();
             int oldQuantity = oldQuantityMap.getOrDefault(inputBookRequest.getBookId(), 0);
             int quantityDiff = newQuantity - oldQuantity;
-
-            // Cập nhật số lượng trong kho (chỉ cập nhật chênh lệch)
             int originalQuantity = inputBookRequest.getQuantity();
             inputBookRequest.setQuantity(quantityDiff);
             bookService.updateBook(inputBookRequest.getBookId(), inputBookRequest);
-            inputBookRequest.setQuantity(originalQuantity); // Khôi phục quantity gốc
-
-            // Kiểm tra xem sách đã có trong phiếu nhập chưa
+            inputBookRequest.setQuantity(originalQuantity);
             BooksImportReceipts booksImportReceipt = existingBookDetailsMap.get(inputBookRequest.getBookId());
 
             if (booksImportReceipt != null) {
-                // CẬP NHẬT item có sẵn
                 booksImportReceipt.setQuantity(newQuantity);
                 booksImportReceipt.setImportPrice(inputBookRequest.getImportPrice());
             } else {
-                // THÊM MỚI item chưa có
                 Books inputBook = bookRepository.findById(inputBookRequest.getBookId()).orElse(null);
                 booksImportReceipt = new BooksImportReceipts();
                 booksImportReceipt.setBook(inputBook);
                 booksImportReceipt.setImportReceipt(importReceipt);
                 booksImportReceipt.setQuantity(newQuantity);
                 booksImportReceipt.setImportPrice(inputBookRequest.getImportPrice());
-
-                // Thêm vào collection hiện tại
                 importReceipt.getBookDetails().add(booksImportReceipt);
             }
 
             processedBookIds.add(inputBookRequest.getBookId());
         }
 
-        // XÓA những sách không có trong request mới (nếu cần)
+        Set<BooksImportReceipts> itemsToRemove = importReceipt.getBookDetails().stream()
+                .filter(detail -> !processedBookIds.contains(detail.getBook().getBookId()))
+                .collect(Collectors.toSet());
+
+        for (BooksImportReceipts itemToRemove : itemsToRemove) {
+            int quantityToSubtract = -itemToRemove.getQuantity(); // Số âm để trừ
+            bookService.updateBookQuantity(itemToRemove.getBook().getBookId(), quantityToSubtract);
+        }
         importReceipt.getBookDetails().removeIf(detail ->
                 !processedBookIds.contains(detail.getBook().getBookId())
         );
-
-        // TÍNH LẠI TỔNG TIỀN SAU KHI ĐÃ XỬ LÝ XONG TẤT CẢ
         BigDecimal totalAmount = importReceipt.getBookDetails().stream()
                 .map(detail -> detail.getImportPrice().multiply(BigDecimal.valueOf(detail.getQuantity())))
                 .reduce(BigDecimal.ZERO, BigDecimal::add);

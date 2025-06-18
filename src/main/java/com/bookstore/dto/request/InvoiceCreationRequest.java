@@ -16,13 +16,9 @@ import lombok.experimental.FieldDefaults;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class InvoiceCreationRequest {
-    String username;
-    String phone;
+    String userId;
     String adminId;
     BigDecimal paidAmount;
     List<BookDeleteRequest> bookDetails;
 
-    public String getUserName() {
-        return username;
-    }
 }
