@@ -141,10 +141,9 @@ public class BookService {
             throw new AppException(ErrorCode.BOOK_NOT_EXISTED);
         }
         monthlyInventoryReportDetailService.createMonthlyInventoryReportDetail(bookId, request.getQuantity(), "Import");
-        request.setQuantity(book.getQuantity() + request.getQuantity());
-        book.setAuthors(resolveAuthors(request.getAuthors()));
-        book.setCategories(resolveCategories(request.getCategories()));
-        bookMapper.updateBook(book, request);
+        int temp = book.getQuantity() + request.getQuantity();
+        book.setImportPrice(request.getImportPrice());
+        book.setQuantity(temp);
         return bookMapper.toBookResponse(bookRepository.save(book));
     }
 
@@ -159,5 +158,11 @@ public class BookService {
         book.setCategories(resolveCategories(request.getCategories()));
         Books updated = bookRepository.save(book);
         return bookMapper.toBookResponse(bookRepository.save(updated));
+    }
+
+    public BookResponse updateBookQuantity(Integer bookId, Integer quantity) {
+        Books book = bookRepository.findById(bookId).orElse(null);
+        book.setQuantity(book.getQuantity() + quantity);
+        return bookMapper.toBookResponse(bookRepository.save(book));
     }
 }

@@ -2,6 +2,9 @@ package com.bookstore.dto.response;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.Set;
+
+import com.bookstore.entity.BooksImportReceipts;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -20,5 +23,5 @@ public class ImportReceiptResponse {
     String adminId;
     LocalDate importDate;
     BigDecimal totalAmount;
-    // Set<BooksImportReceipts> bookDetails;
+    Set<BookUpdateResponse> bookDetails;
 }

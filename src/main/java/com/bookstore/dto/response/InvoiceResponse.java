@@ -22,5 +22,5 @@ public class InvoiceResponse {
     BigDecimal totalAmount;
     BigDecimal paidAmount;
     BigDecimal debtAmount;
-//    Set<BooksInvoices> bookDetails;
+    Set<BookUpdateResponse> bookDetails;
 }

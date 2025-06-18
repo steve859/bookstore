@@ -7,14 +7,15 @@ import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.List;
 
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class InvoiceUpdateRequest {
-    LocalDate createAt;
-    BigDecimal totalAmount;
+    String userId;
+    String adminId;
     BigDecimal paidAmount;
-    BigDecimal debtAmount;
+    List<BookDeleteRequest> bookDetails;
 }
